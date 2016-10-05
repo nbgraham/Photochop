@@ -18,3 +18,8 @@ The first time you run the program, you're likely to get an error
 	netsh http add urlacl url=http://+:80/ user=Simon
 	Of course you'll have to change the "user" parameter to match your username,
 	as given by "net user" command.
+Once it launces successfully, navigate to
+	localhost
+	or
+	localhost/servable/pages/Homepage.html
+	to see our handiwork!
