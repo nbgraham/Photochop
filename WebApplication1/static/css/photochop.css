@@ -1,0 +1,25 @@
+﻿body {
+}
+
+.input_file {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.input_file + img {
+    font-size: 1.25em;
+    font-weight: 700;
+    height: 50px;
+    width: auto;
+    color: white;
+    display: inline-block;
+}
+
+.input_file:focus + label,
+.input_file + label:hover {
+    cursor: pointer;
+}
