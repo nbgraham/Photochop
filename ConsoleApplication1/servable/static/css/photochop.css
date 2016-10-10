@@ -1,4 +1,21 @@
 ﻿body {
+    background-color: lightgreen;
+    font-family: Calibri;
+}
+
+h1 {
+    font-size: xx-large;
+    text-align: center;
+}
+
+section {
+    width: 60%;
+    margin: 0 auto;
+}
+
+ol, li {
+    font-size: large;
+    list-style-position: inside;
 }
 
 .input_file {
