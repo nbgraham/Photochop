@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace ConsoleApplication1
 {
-    class RuleOfThirds : InterestingAreaFinder
+    class RuleOfThirds : MIAFinder
     {
         public Rectangle mostInterestingArea(Image img)
         {
-            
+            return new Rectangle();
         }
 
 
