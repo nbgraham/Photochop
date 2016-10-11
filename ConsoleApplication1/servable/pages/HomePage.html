@@ -4,10 +4,31 @@
     <link rel="stylesheet" href="/servable/static/css/photochop.css">
     <title>Welcome to Photochop!</title>
 	<meta charset="utf-8" />
+    <script type="text/javascript">
+        function mySubmit(evnt) {
+            var fInput = document.getElementById('file');
+            var str = "CONFIRM FILES:";
+            for (var f of fInput.files) {
+                if (f.type != 'image/png'
+                    && f.type != 'image/jpeg'
+                    && f.type != 'image/pjpeg'
+                    && f.type != 'image/gif') {
+                    alert('File "' + f.name + '" isn\'t a .png, .gif, or .jpg. Convert this file, or pick another.');
+                    evnt.preventDefault();
+                    return;
+                }
+                str += '\n' + f.name;
+            }
+            if (!window.confirm(str)) evnt.preventDefault();
+        }
+        window.onload = function () {
+            document.getElementById('myForm').addEventListener('submit', mySubmit);
+        }
+    </script>
 </head>
 <body>
     <h1>Hello There!</h1>
-    <form enctype="multipart/form-data" method="post" name="fileinfo">
+    <form id="myForm" enctype="multipart/form-data" method="post" name="fileinfo">
         <input type="file" id="file" name="file" class="input_file" required />
         <label for="file"><img src="/servable/static/images/upload_button.png" for="input_file" /></label>
         <input type="submit" value="submit" />
