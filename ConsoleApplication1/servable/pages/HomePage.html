@@ -2,7 +2,7 @@
 <html>
 <head>
     <link rel="stylesheet" href="/servable/static/css/photochop.css">
-    <title>Welcome to Photochop!</title>
+    <title>Photochop</title>
 	<meta charset="utf-8" />
     <script type="text/javascript">
         function mySubmit(evnt) {
@@ -27,11 +27,12 @@
     </script>
 </head>
 <body>
-    <h1>Hello There!</h1>
+    <h1>PhotoChop</h1>
     <form id="myForm" enctype="multipart/form-data" method="post" name="fileinfo">
-        <input type="file" id="file" name="file" class="input_file" required />
+        <input type="file" id="file" name="file" class="input_file" accept=".png,.jpeg,.jpg,.git" multiple required />
         <label for="file"><img src="/servable/static/images/upload_button.png" for="input_file" /></label>
         <input type="submit" value="submit" />
     </form>
+    <p>We discover the best parts of your picture</p>
 </body>
 </html>
