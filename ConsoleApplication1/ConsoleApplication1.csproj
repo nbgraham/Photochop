@@ -46,9 +46,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IMyService.cs" />
+    <Compile Include="MIAFinder.cs" />
+    <Compile Include="MIAResource.cs" />
+    <Compile Include="MostColorArea.cs" />
     <Compile Include="MyService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RuleOfThirds.cs" />
+    <Compile Include="Session.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
