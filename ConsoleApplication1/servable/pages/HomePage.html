@@ -6,6 +6,7 @@
 	<meta charset="utf-8" />
     <script type="text/javascript">
         function mySubmit(evnt) {
+            evnt.preventDefault();
             var fInput = document.getElementById('file');
             var str = "CONFIRM FILES:";
             for (var f of fInput.files) {
@@ -14,12 +15,24 @@
                     && f.type != 'image/pjpeg'
                     && f.type != 'image/gif') {
                     alert('File "' + f.name + '" isn\'t a .png, .gif, or .jpg. Convert this file, or pick another.');
-                    evnt.preventDefault();
                     return;
                 }
                 str += '\n' + f.name;
             }
-            if (!window.confirm(str)) evnt.preventDefault();
+            if (!window.confirm(str)) return;
+            var req = new XMLHttpRequest();
+            req.open("POST", "/fileUpload");
+            req.onreadystatechange = function () {
+                if (req.readyState != XMLHttpRequest.DONE) return;
+                if (req.status != 200) {
+                    console.log(req);
+                    alert('Upload failed!');
+                    return;
+                }
+                alert('Upload successful');
+            }
+            req.send(fInput.files[0]);
+            alert('Upload started!');
         }
         window.onload = function () {
             document.getElementById('myForm').addEventListener('submit', mySubmit);

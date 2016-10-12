@@ -19,5 +19,9 @@ namespace ConsoleApplication1
         [OperationContract]
         [WebGet(UriTemplate = "servable/{*path}")]
         Stream serveFile(string path);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "fileUpload")]
+        void fileUpload(Stream body);
     }
 }

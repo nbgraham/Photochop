@@ -53,6 +53,15 @@ namespace ConsoleApplication1
             }
         }
 
+        static int files = 0;
+        public void fileUpload(Stream body)
+        {
+            files++;
+            var f = File.Create("File" + files);
+            body.CopyTo(f);
+            f.Dispose();
+        }
+
         Stream do404(OutgoingWebResponseContext response)
         {
             response.StatusCode = System.Net.HttpStatusCode.NotFound;
