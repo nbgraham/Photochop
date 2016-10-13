@@ -62,6 +62,11 @@ namespace ConsoleApplication1
             f.Dispose();
         }
 
+        public Stream fileGet(string number)
+        {
+            return new FileStream("File1", FileMode.Open);
+        }
+
         Stream do404(OutgoingWebResponseContext response)
         {
             response.StatusCode = System.Net.HttpStatusCode.NotFound;

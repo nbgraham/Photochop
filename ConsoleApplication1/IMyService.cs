@@ -23,5 +23,9 @@ namespace ConsoleApplication1
         [OperationContract]
         [WebInvoke(Method = "POST", BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "fileUpload")]
         void fileUpload(Stream body);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "File{number}")]
+        Stream fileGet(string number);
     }
 }
