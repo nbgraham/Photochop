@@ -21,11 +21,15 @@ namespace ConsoleApplication1
         Stream serveFile(string path);
 
         [OperationContract]
-        [WebInvoke(Method = "POST", BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "fileUpload")]
-        void fileUpload(Stream body);
+        [WebInvoke(Method = "POST", BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "initUpload")]
+        Stream initUpload(Stream body);
 
         [OperationContract]
-        [WebGet(UriTemplate = "File{number}")]
-        Stream fileGet(string number);
+        [WebInvoke(Method = "POST", BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "nextUpload/{session}")]
+        void nextUpload(string session, Stream body);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "File{number}/{session}")]
+        Stream fileGet(string number, string session);
     }
 }

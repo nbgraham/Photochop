@@ -10,18 +10,21 @@ namespace ConsoleApplication1
 {
     class MyService : IMyService
     {
+        static Random rng = new Random(); // For sessions.
+        static Dictionary<string, List<int>> sessions = new Dictionary<string, List<int>>();
+
         static int visits = 0;
         public Stream sayHello()
         {
             visits++;
             WebOperationContext.Current.OutgoingResponse.ContentType = "text";
-            return new MemoryStream(Encoding.ASCII.GetBytes("Hello, World! You are visitor #"+visits));
+            return new MemoryStream(Encoding.ASCII.GetBytes("Hello, World! You are visitor #" + visits));
         }
 
         public Stream serveFile(string path)
         {
             string conType;
-            switch (path.Substring(path.LastIndexOf('.')+1))
+            switch (path.Substring(path.LastIndexOf('.') + 1))
             {
                 case "html":
                     conType = "text/html";
@@ -54,17 +57,42 @@ namespace ConsoleApplication1
         }
 
         static int files = 0;
-        public void fileUpload(Stream body)
+        int upload(Stream body)
         {
-            files++;
-            var f = File.Create("File" + files);
+            int myFile = files++;
+            var f = File.Create("File" + myFile);
             body.CopyTo(f);
             f.Dispose();
+            return myFile;
         }
 
-        public Stream fileGet(string number)
+        public Stream initUpload(Stream body)
         {
-            return new FileStream("File" + number, FileMode.Open);
+            string session;
+            do
+            {
+                byte[] binarySess = new byte[15];
+                rng.NextBytes(binarySess);
+                session = System.Convert.ToBase64String(binarySess).Replace('/', '-');
+            }
+            while (sessions.ContainsKey(session));
+            sessions.Add(session, new List<int>(new int[] { upload(body) }));
+            return new MemoryStream(Encoding.UTF8.GetBytes(session));
+        }
+
+        public void nextUpload(string session, Stream body)
+        {
+            if (!sessions.ContainsKey(session))
+            {
+                //TODO: Error handling as per design specification
+                return;
+            }
+            sessions[session].Add(upload(body));
+        }
+
+        public Stream fileGet(string number, string session)
+        {
+            return new FileStream("File" + sessions[session][int.Parse(number)], FileMode.Open);
         }
 
         Stream do404(OutgoingWebResponseContext response)

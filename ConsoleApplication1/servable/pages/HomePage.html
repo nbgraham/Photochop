@@ -5,9 +5,38 @@
     <title>Photochop</title>
 	<meta charset="utf-8" />
     <script type="text/javascript">
+        var fInput;
+        var session;
+        var uploading; // To prevent multiple uploads at once.
+        function nextUpload(count) {
+            if (count == fInput.files.length) {
+                window.location = 'ImageCropPage.html?s=' + session + '&c=' + count;
+                return;
+            }
+            var req = new XMLHttpRequest();
+            req.open("POST", "/nextUpload/"+session);
+            req.onreadystatechange = function () {
+                if (req.readyState != XMLHttpRequest.DONE) return;
+                if (req.status != 200) {
+                    uploading = false;
+                    console.log(req);
+                    alert('Upload failed!');
+                    return;
+                }
+                nextUpload(count+1);
+            }
+            req.send(fInput.files[count]);
+        }
         function mySubmit(evnt) {
             evnt.preventDefault();
-            var fInput = document.getElementById('file');
+            if (fInput.files.length == 0) {
+                alert("Please click 'Choose File(s)' first!");
+                return;
+            }
+            if (uploading) {
+                alert("Files still uploading, please be patient ;)");
+                return;
+            }
             var str = "CONFIRM FILES:";
             for (var f of fInput.files) {
                 if (f.type != 'image/png'
@@ -17,30 +46,32 @@
                     alert('File "' + f.name + '" isn\'t a .png, .gif, or .jpg. Convert this file, or pick another.');
                     return;
                 }
-		else if(f.size > 10000000)
-		{
-		    alert('File "' + f.name + '" should be less than 10MB. Please make another selection.');
-		    return;
-		}
+                else if(f.size > 10000000)
+                {
+	                alert('File "' + f.name + '" should be less than 10MB. Please make another selection.');
+	                return;
+                }
                 str += '\n' + f.name;
             }
             if (!window.confirm(str)) return;
             var req = new XMLHttpRequest();
-            req.open("POST", "/fileUpload");
+            req.open("POST", "/initUpload");
             req.onreadystatechange = function () {
                 if (req.readyState != XMLHttpRequest.DONE) return;
                 if (req.status != 200) {
+                    uploading = false;
                     console.log(req);
                     alert('Upload failed!');
                     return;
                 }
-                alert('Upload successful');
-                window.location = 'ImageCropPage.html';
+                session = req.response;
+                nextUpload(1);
             }
             req.send(fInput.files[0]);
-            alert('Upload started!');
+            uploading = true;
         }
         window.onload = function () {
+            fInput = document.getElementById('file');
             document.getElementById('myForm').addEventListener('submit', mySubmit);
         }
     </script>
