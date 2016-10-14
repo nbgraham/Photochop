@@ -1,10 +1,11 @@
 ﻿body {
     background-color: lightgreen;
-    font-family: Calibri;
+    font-family: Verdana;
 }
 
 h1 {
     font-size: xx-large;
+    font-color: red;
     text-align: center;
 }
 
@@ -39,4 +40,26 @@ ol, li {
 .input_file:focus + label,
 .input_file + label:hover {
     cursor: pointer;
+}
+
+.button {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0px;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 35px;
+  background: #3498db;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background: #3cb0fd;
+  background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+  text-decoration: none;
 }
