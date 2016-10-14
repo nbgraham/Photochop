@@ -44,12 +44,15 @@
         }
     </script>
 </head>
+
 <body>
     <h1>PhotoChop</h1>
+	<center>
     <form id="myForm" enctype="multipart/form-data" method="post" name="fileinfo">
-        <input type="file" id="file" name="file" class="input_file" accept=".png,.jpeg,.jpg,.gif" multiple required />
-        <label for="file"><img src="/servable/static/images/upload_button.png" for="input_file" /></label>
-        <input type="submit" value="submit" />
+        <input type="file" id="file" name="file" accept=".png,.jpeg,.jpg,.gif" multiple required />
+        <br>
+        <input type="submit" value="Upload" class="input_file" />
+	<label for="submit"><img src="/servable/static/images/upload_button.png" for="input_file" /></label>
     </form>
     <p>We discover the best parts of your picture</p>
 </body>
