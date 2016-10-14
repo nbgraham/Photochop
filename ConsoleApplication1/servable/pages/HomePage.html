@@ -17,6 +17,10 @@
                     alert('File "' + f.name + '" isn\'t a .png, .gif, or .jpg. Convert this file, or pick another.');
                     return;
                 }
+		else if(f.size > 10000000) {
+		    alert('This file is too large. Please make another selection.');
+		    return;
+		}
                 str += '\n' + f.name;
             }
             if (!window.confirm(str)) return;
