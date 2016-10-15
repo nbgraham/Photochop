@@ -13,7 +13,7 @@
         function nextImg() {
             index++;
             if (index >= count) {
-                window.location = 'DownloadPage.html?s=' + session + '&c=' + count; // This needs fixing, obvs.
+                window.location = 'DownloadPage.html?s=' + session + '&c=' + count;
                 return;
             }
             img.src = "/File" + index + '/' + session;

@@ -19,13 +19,15 @@
             session = session.substring(ix1, ix2);
             gallery = document.getElementById('gallery');
             // add the images
-            for (index = 0; index < count; index++)
-                gallery.innerHTML += '<img class="gImage" src="' + '/File' + index + '/' + session + '" />';
+            for (index = 0; index < count; index++) {
+                var src = '/File' + index + '/' + session;
+                gallery.innerHTML += '<a href="' + src + '">' + window.location.hostname+src + '</a><br/>';
+            }
 
 
             // Redirects for the Buttons
-            document.getElementById('links').onclick = function () {
-                window.location = 'DirectLinks.html?s=' + session + '&c=' + count;
+            document.getElementById('downloads').onclick = function () {
+                window.location = 'DownloadPage.html?s='+session+'&c='+count;
             }
             document.getElementById('instagram').onclick = function () {
                 window.location = 'InstagramInstructions.html';
@@ -41,7 +43,7 @@
         <h1>Your Images</h1>
     </section>
     <section id="navigation">
-        <button type="button" id="links">Direct Image Links</button>
+        <button type="button" id="downloads">Regular Downloads</button>
         <button type="button" id="instagram">How to Upload to Instagram</button>
         <button type="button" id="more">Upload More</button>
     </section>

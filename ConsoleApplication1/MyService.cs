@@ -11,7 +11,7 @@ namespace ConsoleApplication1
     class MyService : IMyService
     {
         static Random rng = new Random(); // For sessions.
-        static Dictionary<string, List<int>> sessions = new Dictionary<string, List<int>>();
+        static Dictionary<string, List<ImgRecord>> sessions = new Dictionary<string, List<ImgRecord>>();
 
         static int visits = 0;
         public Stream sayHello()
@@ -57,13 +57,17 @@ namespace ConsoleApplication1
         }
 
         static int files = 0;
-        int upload(Stream body)
+        ImgRecord upload(Stream body)
         {
             int myFile = files++;
             var f = File.Create("File" + myFile);
+            string name = WebOperationContext.Current.IncomingRequest.UriTemplateMatch.QueryParameters["name"];
+            if (name == null) name = "File" + myFile;
+            string type = WebOperationContext.Current.IncomingRequest.UriTemplateMatch.QueryParameters["type"];
+            if (type == null) type = "application/octet-stream";
             body.CopyTo(f);
             f.Dispose();
-            return myFile;
+            return new ImgRecord(myFile, name, type);
         }
 
         public Stream initUpload(Stream body)
@@ -76,7 +80,7 @@ namespace ConsoleApplication1
                 session = System.Convert.ToBase64String(binarySess).Replace('/', '-');
             }
             while (sessions.ContainsKey(session));
-            sessions.Add(session, new List<int>(new int[] { upload(body) }));
+            sessions.Add(session, new List<ImgRecord>(new ImgRecord[] { upload(body) }));
             return new MemoryStream(Encoding.UTF8.GetBytes(session));
         }
 
@@ -97,7 +101,10 @@ namespace ConsoleApplication1
 
         public Stream fileGet(string number, string session)
         {
-            return new FileStream("File" + sessions[session][int.Parse(number)], FileMode.Open);
+            ImgRecord r = sessions[session][int.Parse(number)];
+            WebOperationContext.Current.OutgoingResponse.Headers.Add("Content-Disposition", "attachment; filename=\"" + r.name + "\"");
+            WebOperationContext.Current.OutgoingResponse.ContentType = r.type;
+            return new FileStream("File" + r.file, FileMode.Open);
         }
 
         Stream do404(OutgoingWebResponseContext response)
@@ -105,6 +112,18 @@ namespace ConsoleApplication1
             response.StatusCode = System.Net.HttpStatusCode.NotFound;
             response.ContentType = "text/html";
             return new FileStream("servable/errors/404.html", FileMode.Open);
+        }
+    }
+
+    class ImgRecord
+    {
+        public int file;
+        public string name, type;
+        public ImgRecord(int f, string n, string t)
+        {
+            file = f;
+            name = n;
+            type = t;
         }
     }
 }

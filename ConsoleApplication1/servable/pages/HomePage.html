@@ -15,7 +15,7 @@
                 return;
             }
             var req = new XMLHttpRequest();
-            req.open("POST", "/nextUpload/"+session);
+            req.open("POST", "/nextUpload/" + session + "?type=" + fInput.files[count].type + "&name=" + fInput.files[count].name);
             req.onreadystatechange = function () {
                 if (req.readyState != XMLHttpRequest.DONE) return;
                 if (req.status != 200) {
@@ -63,7 +63,7 @@
             if (!window.confirm(str)) return;
             // gets session id using POST request
             var req = new XMLHttpRequest();
-            req.open("POST", "/initUpload");
+            req.open("POST", "/initUpload?type="+fInput.files[0].type+"&name="+fInput.files[0].name);
             req.onreadystatechange = function () {
                 if (req.readyState != XMLHttpRequest.DONE) return;
                 if (req.status != 200) {
