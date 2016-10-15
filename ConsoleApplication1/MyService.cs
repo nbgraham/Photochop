@@ -80,14 +80,19 @@ namespace ConsoleApplication1
             return new MemoryStream(Encoding.UTF8.GetBytes(session));
         }
 
-        public void nextUpload(string session, Stream body)
+        public Stream nextUpload(string session, Stream body)
         {
+            String response;
             if (!sessions.ContainsKey(session))
             {
-                //TODO: Error handling as per design specification
-                return;
+                response = "Invalid Session";
             }
-            sessions[session].Add(upload(body));
+            else
+            {
+                sessions[session].Add(upload(body));
+                response = "OK";
+            }
+            return new MemoryStream(Encoding.UTF8.GetBytes(response));
         }
 
         public Stream fileGet(string number, string session)

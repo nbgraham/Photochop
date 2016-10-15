@@ -26,7 +26,7 @@ namespace ConsoleApplication1
 
         [OperationContract]
         [WebInvoke(Method = "POST", BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "nextUpload/{session}")]
-        void nextUpload(string session, Stream body);
+        Stream nextUpload(string session, Stream body);
 
         [OperationContract]
         [WebGet(UriTemplate = "File{number}/{session}")]

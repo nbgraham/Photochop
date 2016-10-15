@@ -5,9 +5,10 @@
     <title>Photochop</title>
 	<meta charset="utf-8" />
     <script type="text/javascript">
-        var fInput;
-        var session;
+        var fInput; // form input, i.e. files
+        var session; // session id
         var uploading; // To prevent multiple uploads at once.
+        // adds files to the server using POST request
         function nextUpload(count) {
             if (count == fInput.files.length) {
                 window.location = 'ImageCropPage.html?s=' + session + '&c=' + count;
@@ -20,24 +21,29 @@
                 if (req.status != 200) {
                     uploading = false;
                     console.log(req);
-                    alert('Upload failed!');
+                    alert('Upload failed!' + this.responseText); // alert for error, i.e. invalid session id
                     return;
                 }
+                // more uploads!
                 nextUpload(count+1);
             }
-            req.send(fInput.files[count]);
+            req.send(fInput.files[count]); // sends request
         }
+        // fires when "upload" button clicked
         function mySubmit(evnt) {
             evnt.preventDefault();
+            // checks that files have been selected
             if (fInput.files.length == 0) {
                 alert("Please click 'Choose File(s)' first!");
                 return;
             }
+            // prevents user from smashing upload button
             if (uploading) {
                 alert("Files still uploading, please be patient ;)");
                 return;
             }
             var str = "CONFIRM FILES:";
+            // checks if file is of correct type & size
             for (var f of fInput.files) {
                 if (f.type != 'image/png'
                     && f.type != 'image/jpeg'
@@ -53,7 +59,9 @@
                 }
                 str += '\n' + f.name;
             }
+            // confirmation dialog for uploading
             if (!window.confirm(str)) return;
+            // gets session id using POST request
             var req = new XMLHttpRequest();
             req.open("POST", "/initUpload");
             req.onreadystatechange = function () {
@@ -65,11 +73,14 @@
                     return;
                 }
                 session = req.response;
+                // calls for actual sending of files to server
                 nextUpload(1);
             }
-            req.send(fInput.files[0]);
+            req.send(fInput.files[0]); // sends request
             uploading = true;
         }
+
+        // basic initialization
         window.onload = function () {
             fInput = document.getElementById('file');
             document.getElementById('myForm').addEventListener('submit', mySubmit);
