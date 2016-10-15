@@ -27,7 +27,7 @@ namespace ConsoleApplication1
             host.Close();*/
 
             Image img = Image.FromFile(
-                "C:\\Users\\Tariq Broadnax\\Pictures\\family_131902826.jpg", false);
+                "C:\\Users\\Tariq Broadnax\\Pictures\\color1.jpg", false);
 
             MostColorArea mca = new MostColorArea();
 

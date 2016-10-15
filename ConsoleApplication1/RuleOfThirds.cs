@@ -13,7 +13,5 @@ namespace ConsoleApplication1
         {
             return new Rectangle();
         }
-
-
     }
 }

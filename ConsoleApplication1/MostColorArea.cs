@@ -8,7 +8,15 @@ using System.Threading.Tasks;
 namespace ConsoleApplication1
 {
     class MostColorArea : MIAFinder
-    { 
+    {
+        int[,] tilesMeanRG,
+               tilesMeanYB,
+               tilesVarRG,
+               tilesVarYB;
+
+        Size tileSize;
+        int pixelsInTile;
+
         public Rectangle mostInterestingArea(Image img)
         {
             Bitmap bitmap = new Bitmap(img);
@@ -17,166 +25,203 @@ namespace ConsoleApplication1
 
             List<Rectangle> _areas = areas(img, _sizes);
 
-            Size tileSize = new Size(100, 100);
+            tileSize = new Size(50, 50);
+            pixelsInTile = 50 * 50;
 
-            Color[,] tileAvgColors = 
-                AverageColorsOfTiles(bitmap, tileSize);
+            setTilesMeanRG_YB(bitmap);
+            setTilesVarianceRG_YB(bitmap);
 
-            int[,] tileColorfulness =
-                ColorfulnessOfTiles(bitmap, tileAvgColors, tileSize);
-
-            return mostColorfulArea(_areas, tileAvgColors,
-                                    tileColorfulness, tileSize);
+            return mostColorfulArea(_areas);
         }
 
-        public int Colorfulness(
-            int[,] tileColorfulness,
-            Color[,] tileAvgColors, Size tileSize,
-            Rectangle bound)
+        private double Colorfulness(Rectangle bound)
         {
-            int colLeft = bound.Left / tileSize.Width,
-                colRight = bound.Right / tileSize.Width,
-                rowTop = bound.Top / tileSize.Height,
-                rowBottom = bound.Bottom / tileSize.Height;
+            int varRG = VarianceRG(bound);
+            int varYB = VarianceYB(bound);
 
+            int meanRG = MeanRG(bound),
+                meanYB = MeanYB(bound);
 
-            Color avgColor = 
-                AverageColor(tileAvgColors, tileSize, bound);
+            double stdRGYB = Math.Sqrt(varRG + varYB);
+            double meanRGYB = Math.Sqrt(meanRG * meanRG + meanYB * meanYB);
 
-            int colorfulness = 0;
+            return stdRGYB + 0.3 * meanRGYB;
+        }
+        
+        private int VarianceRG(Rectangle bound)
+        {
+            int startCol = bound.Left / tileSize.Width,
+              endCol = bound.Right / tileSize.Width,
+              startRow = bound.Top / tileSize.Height,
+              endRow = bound.Bottom / tileSize.Height;
 
-            int tileCount = (colRight - colLeft) *
-                            (rowBottom - rowTop);
+            int sum = 0;
 
-            for (int row = rowTop; row < rowBottom; row++)
-                for (int col = colLeft; col < colRight; col++)
-                {
-                    colorfulness += tileColorfulness[col, row] +
-                                    colorDifference(
-                                        avgColor, tileAvgColors[col, row]);
-                }
+            int meanRG = MeanRG(bound);
 
-            colorfulness /= tileCount;
+            for (int row = startRow; row < endRow; row++)
+                for (int col = startCol; col < endCol; col++)
+                    sum += tilesVarRG[col, row] + (meanRG - tilesMeanRG[col, row]) *
+                                                  (meanRG - tilesMeanRG[col, row]);
 
-            return colorfulness;
+            int count = (bound.Width / tileSize.Width) *
+                        (bound.Height / tileSize.Height);
+
+            return sum / count;
         }
 
-        public Color AverageColor(
-            Color[,] tileAvgColors, Size tileSize,
-            Rectangle bound)
+        private int VarianceYB(Rectangle bound)
         {
-            int colLeft = bound.Left / tileSize.Width,
-                colRight = bound.Right / tileSize.Width,
-                rowTop = bound.Top / tileSize.Height,
-                rowBottom = bound.Bottom / tileSize.Height;
+            int startCol = bound.Left / tileSize.Width,
+              endCol = bound.Right / tileSize.Width,
+              startRow = bound.Top / tileSize.Height,
+              endRow = bound.Bottom / tileSize.Height;
 
-            int tileCount = (colRight - colLeft) *
-                             (rowBottom - rowTop);
+            int sum = 0;
 
-            int redSum = 0, greenSum = 0, blueSum = 0;
+            int meanYB = MeanYB(bound);
 
-            for(int row = rowTop; row < rowBottom; row++)
-                for(int col = colLeft; col < colRight; col++)
-                {
-                    Color color = tileAvgColors[col,row];
+            for (int row = startRow; row < endRow; row++)
+                for (int col = startCol; col < endCol; col++)
+                    sum += tilesVarYB[col, row] + (meanYB - tilesMeanYB[col, row]) *
+                                                  (meanYB - tilesMeanYB[col, row]);
 
-                    redSum += color.R;
-                    greenSum += color.G;
-                    blueSum += color.B;
-                }
+            int count = (bound.Width / tileSize.Width) *
+                        (bound.Height / tileSize.Height);
 
-            int redAvg = redSum / tileCount,
-               greenAvg = greenSum / tileCount,
-               blueAvg = blueSum / tileCount;
-
-            int argb = 0;
-
-            argb |= redAvg << 16;
-            argb |= blueAvg << 8;
-            argb |= greenAvg << 0;
-
-            Color avgColor = Color.FromArgb(argb);
-
-            return avgColor;
+            return sum / count;
         }
 
-        public int[,] ColorfulnessOfTiles(
-            Bitmap bm, 
-            Color[,] tileAvgColors,
-            Size tileSize)
+        private void setTilesVarianceRG_YB(Bitmap bitmap)
         {
-            int cols = bm.Width / tileSize.Width;
-            int rows = bm.Height / tileSize.Height;
+            int cols = bitmap.Width / tileSize.Width;
+            int rows = bitmap.Height / tileSize.Height;
 
-            int[,] tileColorfulNess = new int[cols, rows];
-
-            Console.WriteLine("cols: " + cols + " rows: " + rows);
+            tilesVarRG = new int[cols, rows];
+            tilesVarYB = new int[cols, rows];
 
             for (int row = 0; row < rows; row++)
                 for (int col = 0; col < cols; col++)
+                    setVarianceRG_YB(bitmap, col, row);
+        }
+
+        private void setVarianceRG_YB(Bitmap bitmap, int col, int row)
+        {
+            int sumRG = 0, sumYB = 0;
+
+            int x = col * tileSize.Width,
+                y = row * tileSize.Height;
+
+            Rectangle bound = new Rectangle(x, y, tileSize.Width, tileSize.Height);
+
+            for (int r = bound.Top; r < bound.Bottom; r++)
+                for (int c = bound.Left; c < bound.Right; c++)
                 {
-                    int x = col * tileSize.Width,
-                        y = row * tileSize.Height;
+                    Color color = bitmap.GetPixel(c, r);
+                    int rg = RG(color);
+                    int yb = YB(color);
 
-                    Rectangle bound = new Rectangle(x, y, tileSize.Width, tileSize.Height);
+                    sumRG += (tilesMeanRG[col,row] - rg) *
+                             (tilesMeanRG[col,row] - rg);
 
-                    tileColorfulNess[col, row] = ColorfulnessOfTile(
-                        bm, bound, tileAvgColors[col, row]);
+                    sumYB += (tilesMeanYB[col, row] - yb) *
+                             (tilesMeanYB[col, row] - yb);
                 }
 
-            return tileColorfulNess;
+            tilesVarRG[col, row] = sumRG / pixelsInTile;
+            tilesVarYB[col, row] = sumYB / pixelsInTile;
         }
-        
-        public int ColorfulnessOfTile(
-            Bitmap bitmap,
-            Rectangle bound,
-            Color avgColor)
-        {
-            int sumDiff = 0,
-                pixelCount = bound.Width * bound.Height;
 
-            for (int y = bound.Top; y < bound.Bottom; y++)
-                for (int x = bound.Left; x < bound.Right; x++)
+        private int MeanRG(Rectangle bound)
+        {
+            int startCol = bound.Left / tileSize.Width,
+                endCol = bound.Right / tileSize.Width,
+                startRow = bound.Top / tileSize.Height,
+                endRow = bound.Bottom / tileSize.Height;
+
+            int sumMeanRG = 0;
+
+            for (int row = startRow; row < endRow; row++)
+                for (int col = startCol; col < endCol; col++)
+                    sumMeanRG += tilesMeanRG[col,row];
+
+            int count = (bound.Width / tileSize.Width) *
+                        (bound.Height / tileSize.Height);
+
+            return sumMeanRG / count;
+        }
+
+        private int MeanYB(Rectangle bound)
+        {
+            int startCol = bound.Left / tileSize.Width,
+               endCol = bound.Right / tileSize.Width,
+               startRow = bound.Top / tileSize.Height,
+               endRow = bound.Bottom / tileSize.Height;
+
+            int sumMeanYB = 0;
+
+            for (int row = startRow; row < endRow; row++)
+                for (int col = startCol; col < endCol; col++)
+                    sumMeanYB += tilesMeanYB[col, row];
+
+            int count = (bound.Width / tileSize.Width) *
+                        (bound.Height / tileSize.Height);
+
+            return sumMeanYB / count;
+        }
+
+        private void setTilesMeanRG_YB(Bitmap bitmap)
+        {
+            int cols = bitmap.Width / tileSize.Width;
+            int rows = bitmap.Height / tileSize.Height;
+
+            tilesMeanRG = new int[cols, rows];
+            tilesMeanYB = new int[cols, rows];
+
+            for (int row = 0; row < rows; row++)
+                for (int col = 0; col < cols; col++)
+                    setMeanRG_YB(bitmap, col, row);
+        }
+
+        private void setMeanRG_YB(Bitmap bitmap, int col, int row)
+        {
+            int sumRG = 0, sumYB = 0;
+
+            int x = col * tileSize.Width,
+                       y = row * tileSize.Height;
+
+            Rectangle bound =
+                new Rectangle(x, y, tileSize.Width, tileSize.Height);
+
+            for (int j = bound.Top; j < bound.Bottom; j++)
+                for(int i = bound.Left; i < bound.Right; i++)
                 {
                     Color color = bitmap.GetPixel(x, y);
 
-                    sumDiff += colorDifference(color, avgColor);
+                    sumRG += RG(color);
+                    sumYB += YB(color);
                 }
 
-            int colorfulness = sumDiff / pixelCount;
-
-            return colorfulness;
+            tilesMeanRG[col, row] = sumRG / pixelsInTile;
+            tilesMeanYB[col, row] = sumYB / pixelsInTile;
         }
-      
-        public Color[,] AverageColorsOfTiles(
-            Bitmap bm, Size tileSize)
+
+        private int RG(Color color)
         {
-            int cols = bm.Width / tileSize.Width;
-            int rows = bm.Height / tileSize.Height;
+            return Math.Abs(color.R - color.G);
+        }
 
-            Console.WriteLine("cols: " + cols + " rows: " + rows);
-            Color[,] avgColors = new Color[cols, rows];
-
-            for (int row = 0; row < rows; row++)
-                for (int col = 0; col < cols; col++)
-                {
-                    int x = col * tileSize.Width,
-                        y = row * tileSize.Height;
-
-                    Rectangle bound = new Rectangle(x, y, tileSize.Width, tileSize.Height);
-
-                    avgColors[col, row] = averageColor(bm, bound);
-                }
-
-            return avgColors;
+        private int YB(Color color)
+        {
+            return Math.Abs((color.R + color.G) / 2 - color.B);
         }
 
         private List<Size> sizes(Image img)
         {
             List<Size> sizes = new List<Size>();
 
-            for (int height = 300; height < img.Height; height += 200)
-                for (int width = 300; width < img.Width; width += 200)
+            for (int height = 300; height < img.Height; height += 100)
+                for (int width = 300; width < img.Width; width += 100)
                 {
                     Size size = new Size(width, height);
 
@@ -209,13 +254,9 @@ namespace ConsoleApplication1
             return areas;
         }
 
-        private Rectangle mostColorfulArea(
-            List<Rectangle> areas,
-            Color[,] tileAvgColors,
-            int[,] tileColorfulness,
-            Size tileSize)
+        private Rectangle mostColorfulArea(List<Rectangle> areas)
         {
-            int maxColorfulness = 0;
+            double maxColorfulness = 0;
 
             Rectangle mostColorfulArea = default(Rectangle);
 
@@ -225,13 +266,11 @@ namespace ConsoleApplication1
                 Console.WriteLine("Progress: " + i + "/" + areas.Count);
                 i++;
 
-                int _colorfulness = 
-                    Colorfulness(tileColorfulness, tileAvgColors, 
-                                 tileSize, area);
+                double colorfulness = Colorfulness(area);
 
-                if (maxColorfulness < _colorfulness)
+                if (maxColorfulness <= colorfulness)
                 {
-                    maxColorfulness = _colorfulness;
+                    maxColorfulness = colorfulness;
                     mostColorfulArea = area;
                 }
             }
@@ -239,48 +278,6 @@ namespace ConsoleApplication1
             return mostColorfulArea;
         }
 
-        public Color averageColor(Bitmap bitmap, Rectangle bound)
-        {
-            int redSum = 0, greenSum = 0, blueSum = 0;
-
-            int pixelCount = bound.Width * bound.Height;
-
-            for (int y = bound.Top; y < bound.Bottom; y++)
-                for (int x = bound.Left; x < bound.Right; x++)
-                {
-                    Color color = bitmap.GetPixel(x, y);
-
-                    redSum += color.R;
-                    greenSum += color.G;
-                    blueSum += color.B;
-                }
-
-            int redAvg = redSum / pixelCount,
-                greenAvg = greenSum / pixelCount,
-                blueAvg = blueSum / pixelCount;
-
-            int argb = 0;
-
-            argb |= redAvg << 16;
-            argb |= blueAvg << 8;
-            argb |= greenAvg << 0;
-
-            Color avgColor = Color.FromArgb(argb);
-
-            return avgColor;
-        }
-
-        // let each color's rgb represent a vector
-        // returns the eucludian distance sqrd of those vectors
-        public int colorDifference(Color c1, Color c2)
-        {
-            byte x1 = c1.R, y1 = c1.G, z1 = c1.B,
-                 x2 = c2.R, y2 = c2.G, z2 = c2.B;
-
-            // sqrt is too costly
-            return (x1 - x2) * (x1 - x2) +
-                   (y1 - y2) * (y1 - y2) +
-                   (z1 - z2) * (z1 - z2);
-        }
+       
     }
 }
