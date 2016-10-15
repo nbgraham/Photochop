@@ -47,11 +47,13 @@
 </head>
 <body>
     <h1>PhotoChop</h1>
-    <center>
-    <form id="myForm" enctype="multipart/form-data" method="post" name="fileinfo">
-	<input type="submit" class="button" value="Upload" /></label><br><br>
-        <input type="file" id="file" name="file" accept=".png,.jpeg,.jpg,.gif" multiple required />
-    </form>
-    <p>We discover the best parts of your picture</p>
+    <section>
+        <form id="myForm" enctype="multipart/form-data" method="post" name="fileinfo">
+            <input type="submit" id="upload" value="Upload" />
+            <input type="file" id="file" name="file" accept=".png,.jpeg,.jpg,.gif" multiple required />
+            <label for="file" id="flabel">Choose File(s)</label>
+        </form>
+        <p id="slogan">We discover the best parts of your picture</p>
+    </section>
 </body>
 </html>

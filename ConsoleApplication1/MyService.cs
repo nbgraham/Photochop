@@ -64,7 +64,7 @@ namespace ConsoleApplication1
 
         public Stream fileGet(string number)
         {
-            return new FileStream("File1", FileMode.Open);
+            return new FileStream("File" + number, FileMode.Open);
         }
 
         Stream do404(OutgoingWebResponseContext response)
