@@ -5,10 +5,45 @@
     <title>Photochop</title>
 	<meta charset="utf-8" />
     <script type="text/javascript">
+        var fInput; // form input, i.e. files
+        var session; // session id
+        var uploading; // To prevent multiple uploads at once.
+        // adds files to the server using POST request
+        function nextUpload(count) {
+            if (count == fInput.files.length) {
+                window.location = 'ImageCropPage.html?s=' + session + '&c=' + count;
+                return;
+            }
+            var req = new XMLHttpRequest();
+            req.open("POST", "/nextUpload/"+session);
+            req.onreadystatechange = function () {
+                if (req.readyState != XMLHttpRequest.DONE) return;
+                if (req.status != 200) {
+                    uploading = false;
+                    console.log(req);
+                    alert('Upload failed!' + this.responseText); // alert for error, i.e. invalid session id
+                    return;
+                }
+                // more uploads!
+                nextUpload(count+1);
+            }
+            req.send(fInput.files[count]); // sends request
+        }
+        // fires when "upload" button clicked
         function mySubmit(evnt) {
             evnt.preventDefault();
-            var fInput = document.getElementById('file');
+            // checks that files have been selected
+            if (fInput.files.length == 0) {
+                alert("Please click 'Choose File(s)' first!");
+                return;
+            }
+            // prevents user from smashing upload button
+            if (uploading) {
+                alert("Files still uploading, please be patient ;)");
+                return;
+            }
             var str = "CONFIRM FILES:";
+            // checks if file is of correct type & size
             for (var f of fInput.files) {
                 if (f.type != 'image/png'
                     && f.type != 'image/jpeg'
@@ -17,36 +52,50 @@
                     alert('File "' + f.name + '" isn\'t a .png, .gif, or .jpg. Convert this file, or pick another.');
                     return;
                 }
+                else if(f.size > 10000000)
+                {
+	                alert('File "' + f.name + '" should be less than 10MB. Please make another selection.');
+	                return;
+                }
                 str += '\n' + f.name;
             }
+            // confirmation dialog for uploading
             if (!window.confirm(str)) return;
+            // gets session id using POST request
             var req = new XMLHttpRequest();
-            req.open("POST", "/fileUpload");
+            req.open("POST", "/initUpload");
             req.onreadystatechange = function () {
                 if (req.readyState != XMLHttpRequest.DONE) return;
                 if (req.status != 200) {
+                    uploading = false;
                     console.log(req);
                     alert('Upload failed!');
                     return;
                 }
-                alert('Upload successful');
-                window.location = 'ImageCropPage.html';
+                session = req.response;
+                // calls for actual sending of files to server
+                nextUpload(1);
             }
-            req.send(fInput.files[0]);
-            alert('Upload started!');
+            req.send(fInput.files[0]); // sends request
+            uploading = true;
         }
+
+        // basic initialization
         window.onload = function () {
+            fInput = document.getElementById('file');
             document.getElementById('myForm').addEventListener('submit', mySubmit);
         }
     </script>
 </head>
 <body>
     <h1>PhotoChop</h1>
-    <form id="myForm" enctype="multipart/form-data" method="post" name="fileinfo">
-        <input type="file" id="file" name="file" class="input_file" accept=".png,.jpeg,.jpg,.gif" multiple required />
-        <label for="file"><img src="/servable/static/images/upload_button.png" for="input_file" /></label>
-        <input type="submit" value="submit" />
-    </form>
-    <p>We discover the best parts of your picture</p>
+    <section>
+        <form id="myForm" enctype="multipart/form-data" method="post" name="fileinfo">
+            <input type="submit" id="upload" value="Upload" />
+            <input type="file" id="file" name="file" accept=".png,.jpeg,.jpg,.gif" multiple required />
+            <label for="file" id="flabel">Choose File(s)</label>
+        </form>
+        <p id="slogan">We discover the best parts of your picture</p>
+    </section>
 </body>
 </html>

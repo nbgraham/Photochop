@@ -5,9 +5,37 @@
     <link rel="stylesheet" href="/servable/static/css/photochop.css">
     <title>Photochop</title>
     <meta charset="utf-8" />
+    <script type="text/javascript">
+        var index = 0;
+        var count;
+        var img;
+        var session;
+        function nextImg() {
+            index++;
+            if (index >= count) {
+                window.location = "HomePage.html"; // This needs fixing, obvs.
+                return;
+            }
+            img.src = "/File" + index + '/' + session;
+        }
+        window.onload = function () {
+            session = window.location.href;
+            var ix1 = session.indexOf("?s=") + 3;
+            var ix2 = session.indexOf("&c=");
+            count = parseInt(session.substring(ix2 + 3));
+            session = session.substring(ix1, ix2);
+            img = document.getElementById('image');
+            img.src = "/File" + index + '/' + session;
+            img.removeAttribute('hidden');
+            document.getElementById('nextBtn').addEventListener('click', nextImg);
+        }
+    </script>
 </head>
 <body>
-    <h1>Your Image</h1>
-    <img id="image" src="/File1"/>
+    <section>
+        <h1>Your Image</h1>
+        <img id="image" hidden src="" />
+        <button id="nextBtn">Next Image</button>
+    </section>
 </body>
 </html>
