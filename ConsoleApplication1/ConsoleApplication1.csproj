@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="frontendstuff.cs" />
     <Compile Include="IMyService.cs" />
     <Compile Include="MIAFinder.cs" />
     <Compile Include="MIAResource.cs" />
