@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace ConsoleApplication1
 {
@@ -12,7 +14,7 @@ namespace ConsoleApplication1
     {
         static void Main(string[] args)
         {
-            var host = new WebServiceHost(typeof(MyService), new Uri("http://localhost:80/"));
+            /*var host = new WebServiceHost(typeof(MyService), new Uri("http://localhost:80/"));
             WebHttpBinding bind = new WebHttpBinding();
             //MaxBufferSize and TransferMode pulled from http://stackoverflow.com/questions/1354749/wcf-service-to-accept-a-post-encoded-multipart-form-data
             bind.MaxBufferSize = 65536;
@@ -22,7 +24,22 @@ namespace ConsoleApplication1
             host.Open();
             Console.WriteLine("Return to quit...");
             Console.ReadLine();
-            host.Close();
+            host.Close();*/
+
+            Image img = Image.FromFile(
+                "C:\\Users\\Tariq Broadnax\\Pictures\\family_131902826.jpg", false);
+
+            MostColorArea mca = new MostColorArea();
+
+            Rectangle mia = mca.mostInterestingArea(img);
+
+            Bitmap bm = new Bitmap(img),
+                   bm2 = bm.Clone(mia, bm.PixelFormat);
+
+            bm2.Save("test.jpeg", ImageFormat.Jpeg);
+
+            Console.WriteLine(mia);
+            Console.WriteLine("finished");
         }
     }
 }
