@@ -14,7 +14,7 @@ namespace ConsoleApplication1
     {
         static void Main(string[] args)
         {
-            var host = new WebServiceHost(typeof(MyService), new Uri("http://localhost:80/"));
+            var host = new WebServiceHost(typeof(MyService), new Uri("http://localhost:800/"));
             WebHttpBinding bind = new WebHttpBinding();
             //MaxBufferSize and TransferMode pulled from http://stackoverflow.com/questions/1354749/wcf-service-to-accept-a-post-encoded-multipart-form-data
             bind.MaxBufferSize = 65536;

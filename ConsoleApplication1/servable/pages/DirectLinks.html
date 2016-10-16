@@ -21,7 +21,8 @@
             // add the images
             for (index = 0; index < count; index++) {
                 var src = '/File' + index + '/' + session;
-                gallery.innerHTML += '<a href="' + src + '">' + window.location.hostname+src + '</a><br/>';
+
+               gallery.innerHTML += '<img  style="width:100px; hight:100px;" src="' + src + '"/> <a href="' + src + '">' +'Download: ' + window.location.hostname + src + '</a><br/>';
             }
 
 
@@ -39,8 +40,9 @@
     </script>
 </head>
 <body>
-    <section id="gallery">
-        <h1>Your Images</h1>
+    <h1>Your Images</h1>
+    <section id="gallery" style="overflow-y:scroll; border-style:solid; height:70%">
+       <!-- Images go hear -->
     </section>
     <section id="navigation">
         <button type="button" id="downloads">Regular Downloads</button>
