@@ -13,6 +13,21 @@ section {
     text-align: center;
 }
 
+#instructions {
+    width: 60%;
+    text-align: left;
+}
+
+#gallery {
+    width: 90%;
+}
+
+.gImage {
+    width: 20%;
+    display: inline-block;
+    margin: 5px;
+}
+
 ol, li {
     font-size: large;
     list-style-position: inside;

@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Photochop</title>
+    <link href="/servable/static/css/photochop.css" rel="stylesheet" />
+    <script type="text/javascript">
+        var index;
+        var count;
+        var gallery;
+        var session;
+
+        window.onload = function () {
+            session = window.location.href;
+            var ix1 = session.indexOf("?s=") + 3;
+            var ix2 = session.indexOf("&c=");
+            count = parseInt(session.substring(ix2 + 3));
+            session = session.substring(ix1, ix2);
+            gallery = document.getElementById('gallery');
+            // add the images
+            for (index = 0; index < count; index++)
+                gallery.innerHTML += '<img class="gImage" src="' + '/File' + index + '/' + session + '" />';
+
+
+            // Redirects for the Buttons
+            document.getElementById('links').onclick = function () {
+                window.location = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';  // needs to be changed
+            }
+            document.getElementById('instagram').onclick = function () {
+                window.location = 'InstagramInstructions.html';
+            }
+        }
+    </script>
+</head>
+<body>
+    <section id="gallery">
+        <h1>Your Images</h1>
+    </section>
+    <section id="navigation">
+        <button type="button" id="links">Direct Image Links</button>
+        <button type="button" id="instagram">How to Upload to Instagram</button>
+        <button type="button" id="more">Upload More</button>
+    </section>
+</body>
+</html>
