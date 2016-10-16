@@ -24,15 +24,16 @@ namespace ConsoleApplication1
             host.Open();
             Console.WriteLine("Return to quit...");
             Console.ReadLine();
-            host.Close();
+            host.Close(); 
 
-            /*
-            Image img = Image.FromFile(
-                "C:\\Users\\Tariq Broadnax\\Pictures\\color1.jpg", false);
+            
+            /*Image img = Image.FromFile(
+                "C:\\Users\\Tariq Broadnax\\Pictures\\demo.png", false);
 
             MostColorArea mca = new MostColorArea();
+            RuleOfThirds rot = new RuleOfThirds();
 
-            Rectangle mia = mca.mostInterestingArea(img);
+            Rectangle mia = rot.mostInterestingArea(img);
 
             Bitmap bm = new Bitmap(img),
                    bm2 = bm.Clone(mia, bm.PixelFormat);
@@ -40,8 +41,8 @@ namespace ConsoleApplication1
             bm2.Save("test.jpeg", ImageFormat.Jpeg);
 
             Console.WriteLine(mia);
-            Console.WriteLine("finished");
-            */
+            Console.WriteLine("finished");*/
+            
         }
     }
 }
