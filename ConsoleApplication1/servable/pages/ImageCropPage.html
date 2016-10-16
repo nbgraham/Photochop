@@ -18,6 +18,15 @@
             }
             img.src = "/File" + index + '/' + session;
         }
+
+        function previousImg() {
+            index--;
+            if (index < 0) index++; // Do nothing -- Or possibly ask the use if they want to start over 
+            else 
+            {
+                img.src = "/File" + index + '/' + session;
+            }
+        }
         window.onload = function () {
             session = window.location.href;
             var ix1 = session.indexOf("?s=") + 3;
@@ -28,14 +37,20 @@
             img.src = "/File" + index + '/' + session;
             img.removeAttribute('hidden');
             document.getElementById('nextBtn').addEventListener('click', nextImg);
+            document.getElementById('backBtn').addEventListener('click', previousImg);
         }
     </script>
 </head>
 <body>
+    <h1 style="margin: 0 auto;">Your Image</h1>
+    <br /><br />
     <section>
-        <h1>Your Image</h1>
-        <img id="image" hidden src=""  />
-        <button id="nextBtn">Next Image</button>
+        <img id="nextBtn" src="../static/images/next-btn.png" style="width:200px; height:200px; float: right; margin-left:-30px" />
+        <img id="backBtn" src="../static/images/back-btn.png" style="width:200px; height:200px; float: left; margin-right:-30px" />
+        <img id="image" hidden src=""  style="max-height:400px; max-width:400px; margin: 0 auto"/>
+        
+        <button id="ruleOfThirds" >RULE OF THIRDS</button>
+        <button id="mostColorfulArea">MOST COLORFUL AREA</button>
     </section>
 </body>
 </html>

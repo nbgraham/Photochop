@@ -100,6 +100,8 @@
     <Content Include="servable\static\css\photochop.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="servable\static\images\back-btn.png" />
+    <Content Include="servable\static\images\next-btn.png" />
     <Content Include="servable\static\images\upload_button.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
