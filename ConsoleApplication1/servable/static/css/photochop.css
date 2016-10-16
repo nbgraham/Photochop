@@ -8,6 +8,7 @@ h1 {
     text-align: center;
 }
 
+/* Section Styling */
 section {
     margin: 0 auto;
     text-align: center;
@@ -19,20 +20,20 @@ section {
 }
 
 #gallery {
-    width: 90%;
+    padding: 5px;
+    width: 80%;
+    height:600px;
+    overflow-y:scroll;
+    border-style:solid;
 }
 
-.gImage {
-    width: 20%;
-    display: inline-block;
-    margin: 5px;
-}
-
+/* List Styling */
 ol, li {
     font-size: large;
     list-style-position: inside;
 }
 
+/* File Button Styling*/
 #file {
 	width: 0.1px;
 	height: 0.1px;
@@ -68,6 +69,7 @@ ol, li {
     border-left: 2px solid #8f8f8f;
 }
 
+/* Upload Button Styling*/
 #upload {
   font-family: Arial;
   color: #ffffff;
@@ -87,9 +89,65 @@ ol, li {
   background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
   text-decoration: none;
 }
+/* Next and Back Button Styling*/
+#back, #next {
+    display: inline-block;
+    width:200px;
+    height:200px;
+    margin: 10px;
+    vertical-align: middle;
+}
 
+#back {
+     float: left;
+}
+
+#next {
+    float: right;
+}
+
+/* Image for the Crop Page*/
 #image {
-    display: block;
+    display: inline-block;
     margin: 0 auto;
-    width: 60%;
+    max-width: 600px;
+    min-width: 100px;
+    max-height: 600px;
+    min-height: 100px;
+    height: auto;
+    width: auto;
+}
+
+/* Gallery Image */
+.gImage {
+    height: 30%;
+    width: auto;
+    min-width: 100px;
+    min-height: 100px;
+    max-height: 450px;
+    max-width: 450px;
+    display: inline-block;
+    margin: 10px;
+}
+
+/*Direct Link Block, Image and Linke*/
+.lBlock {
+    display: block;
+    width: 80%;
+    min-width: 400px;
+    vertical-align: middle;
+}
+
+.lImage {
+    padding: 5px;
+    width: 200px;
+    height: 200px;
+}
+
+.lLink {
+    text-decoration: none;
+}
+
+.lLink:hover {
+    color: blueviolet;
 }

@@ -36,8 +36,8 @@
             img = document.getElementById('image');
             img.src = "/File" + index + '/' + session;
             img.removeAttribute('hidden');
-            document.getElementById('nextBtn').addEventListener('click', nextImg);
-            document.getElementById('backBtn').addEventListener('click', previousImg);
+            document.getElementById('next').addEventListener('click', nextImg);
+            document.getElementById('back').addEventListener('click', previousImg);
 
         }
     </script>
@@ -46,11 +46,12 @@
     <h1 style="margin: 0 auto;">Your Image</h1>
     <br /><br />
     <section>
-        <img id="nextBtn" src="../static/images/next-btn.png" style="width:200px; height:200px; float: right; margin-left:-30px" />
-        <img id="backBtn" src="../static/images/back-btn.png" style="width:200px; height:200px; float: left; margin-right:-30px" />
-        <img id="image" hidden src=""  style="max-height:400px; max-width:400px; margin: 0 auto"/>
-        
-        <button id="ruleOfThirds" >RULE OF THIRDS</button>
+        <img id="image" hidden src="" />
+        <img id="next" src="../static/images/next-btn.png" />
+        <img id="back" src="../static/images/back-btn.png" />        
+    </section>
+    <section>
+        <button id="ruleOfThirds">RULE OF THIRDS</button>
         <button id="mostColorfulArea">MOST COLORFUL AREA</button>
     </section>
 </body>

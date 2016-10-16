@@ -20,7 +20,7 @@
             gallery = document.getElementById('gallery');
             // add the images
             for (index = 0; index < count; index++)
-                gallery.innerHTML += '<img class="gImage" src="' + '/File' + index + '/' + session + '" style="width:200px; height:200px" />';
+                gallery.innerHTML += '<img class="gImage" src="' + '/File' + index + '/' + session + '" />';
 
 
             // Redirects for the Buttons
@@ -39,7 +39,7 @@
 <body>
     
     <h1 style="margin:0 auto">Your Images</h1><br />
-    <section id="gallery" style="height:600px ; overflow-y:scroll ; border-style:solid">
+    <section id="gallery">
         
     </section>
     <section id="navigation">

@@ -22,7 +22,10 @@
             for (index = 0; index < count; index++) {
                 var src = '/File' + index + '/' + session;
 
-               gallery.innerHTML += '<img  style="width:100px; hight:100px;" src="' + src + '"/> <a href="' + src + '">' +'Download: ' + window.location.hostname + src + '</a><br/>';
+                gallery.innerHTML += '<div class="lBlock"> \
+                                        <img class="lImage" src="' + src + '"/> \
+                                        <a class="lLink" href="' + src + '">' + 'Download: ' + window.location.hostname + src + '</a> \
+                                      </div>';
             }
 
 
