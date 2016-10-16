@@ -23,4 +23,6 @@ Once it launches successfully, navigate to
 "localhost"
 or
 "localhost/servable/pages/Homepage.html"
-to see our handiwork!
+to see our handiwork!  
+
+Uses [ImageProcessor](http://imageprocessor.org) library, specifically the [ImageFactory class](http://imageprocessor.org/imageprocessor/imagefactory/).
