@@ -34,7 +34,7 @@ namespace ConsoleApplication1
             return rect;
         }
 
-        private Point getAverageRectangleCenter(Rectangle[] rects)
+        private static Point getAverageRectangleCenter(Rectangle[] rects)
         {
             int sumx = 0;
             int sumy = 0;
@@ -50,7 +50,7 @@ namespace ConsoleApplication1
             return new Point(sumx / count, sumy / count);
         }
 
-        private Rectangle getBoundContainingSDCenters(double sds, Rectangle[] rects, Point averageCenter)
+        private static Rectangle getBoundContainingSDCenters(double sds, Rectangle[] rects, Point averageCenter)
         {
             double sumx = 0;
             double sumy = 0;
