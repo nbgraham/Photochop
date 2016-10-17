@@ -25,4 +25,4 @@ or
 "localhost/servable/pages/Homepage.html"
 to see our handiwork!  
 
-Uses [ImageProcessor](http://imageprocessor.org) library, specifically the [ImageFactory class](http://imageprocessor.org/imageprocessor/imagefactory/).
+Uses [ImageProcessor](http://imageprocessor.org) library, specifically the [ImageFactory class](http://imageprocessor.org/imageprocessor/imagefactory/) and [Aforge.NET](http://www.aforgenet.com/).
