@@ -151,3 +151,15 @@ ol, li {
 .lLink:hover {
     color: blueviolet;
 }
+
+#wrap {
+    position: relative;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, 0);
+}
+
+#cropArea {
+    position: absolute;
+    border:3px #ff0000;
+}

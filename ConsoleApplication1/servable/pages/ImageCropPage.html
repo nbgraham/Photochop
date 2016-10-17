@@ -40,10 +40,15 @@
             // get the session and image count
             count = parseInt(session.substring(ix2 + 3));
             session = session.substring(ix1, ix2);
+
             // display the first image for the session
             img = document.getElementById('image');
             img.src = "/File" + index + '/' + session;
             img.removeAttribute('hidden');
+
+            wrap = document.getElementById('wrap');
+            wrap.style.width = img.style.width;
+
             // add the button listeners
             document.getElementById('next').addEventListener('click', nextImg);
             document.getElementById('back').addEventListener('click', previousImg);
@@ -56,7 +61,10 @@
     <br /><br />
     <section>
         <!-- Image displayed for cropping -->
-        <img id="image" hidden src="" />
+        <div id="wrap" style="width:0px">
+            <img id="image" hidden src="">
+            <div id ="cropArea" hidden style="top:0px;left:0px;width:100px;height:100px"></div>
+        </div>
         <!-- Button for navigation-->
         <img id="next" src="../static/images/next-btn.png" />
         <img id="back" src="../static/images/back-btn.png" />        
@@ -65,6 +73,7 @@
     <section>
         <button id="ruleOfThirds">RULE OF THIRDS</button>
         <button id="mostColorfulArea">MOST COLORFUL AREA</button>
+        <button id="mostInterestingArea">MOST INTERESTING AREA</button>
     </section>
 </body>
 </html>
