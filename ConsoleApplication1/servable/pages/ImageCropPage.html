@@ -11,6 +11,9 @@
         var img;
         var session;
         var cropping = false;
+        var MCRect;
+        var MIARect;
+        var ROFRect;
         
         // displays the next image or if on last image redirects to download page
         function nextImg() {
@@ -38,29 +41,24 @@
                     return;
                 }
                 img.src = "/File" + index + '/' + session;
-                findMIA(index, session);
+                processImage(index, session);
             }
             cropping = true;
             req.send();
         }
 
-        // displays the previous image
-        function previousImg() {
-            alert("Not supported, someone needs to remove this button!");
-            return;
-            //Screwy now that we crop when 'next' is pressed
-            /*
-            index--;
-            if (index < 0) index++; // Do nothing -- Or possibly ask the user if they want to start over 
-            else 
-            {
-                img.src = "/File" + index + '/' + session;
-            
-            }
-            */
+        
+     
+        function drawProcessedRect(boundingRect)
+        {
+            boundingArea = document.getElementById('cropArea');
+            boundingArea.style.top = boundingRect.top + 'px';
+            boundingArea.style.left = boundingRect.left + 'px';
+            boundingArea.style.width = boundingRect.width + 'px';
+            boundingArea.style.height = boundingRect.height + 'px';
         }
 
-        function findMIA(index, session) {
+        function processImage(index, session) {
             var req = new XMLHttpRequest();
             req.open("POST", "/getMIA/" + index + "/" + session);
 
@@ -78,22 +76,28 @@
 
                 var styleParts = boundingAreaStyle.split(';');
                 var boundingArea = document.getElementById('cropArea');
+                var  boundingAreaStyle = req.response;
+                var styleParts = boundingAreaStyle.split(';');
 
-                /*
-                boundingAreaStyle = {
+                MIARect = {
                     'top': styleParts[0],
                     'left': styleParts[1],
                     'width': styleParts[2],
                     'height': styleParts[3]
                 };
-                boundingArea.style = boundingAreaStyle;
-                */
-
-                boundingArea.style.top = styleParts[0] + "px";
-                boundingArea.style.left = styleParts[1] + "px";
-                boundingArea.style.width = styleParts[2] + "px";
-                boundingArea.style.height = styleParts[3] + "px";
-                boundingArea.removeAttribute('hidden');
+                ROFRect = {
+                    'top': styleParts[4],
+                    'left': styleParts[5],
+                    'width': styleParts[6],
+                    'height': styleParts[7]
+                };
+                MCRect = {
+                    'top': styleParts[8],
+                    'left': styleParts[9],
+                    'width': styleParts[10],
+                    'height': styleParts[11]
+                };
+                drawProcessedRect(MIARect);
             }
 
             req.send();
@@ -115,11 +119,20 @@
             wrap = document.getElementById('wrap');
             wrap.style.width = img.style.width;
 
-            findMIA(index, session);
+            processImage(index, session);
 
             // add the button listeners
             document.getElementById('next').addEventListener('click', nextImg);
-            document.getElementById('back').addEventListener('click', previousImg);
+         //   document.getElementById('back').addEventListener('click', previousImg);
+            document.getElementById('ruleOfThirds').addEventListener('click', function () {
+                drawProcessedRect(ROFRect);
+            });
+            document.getElementById('mostColorfulArea').addEventListener('click', function () {
+                drawProcessedRect(MCRect);
+            });
+            document.getElementById('mostInterestingArea').addEventListener('click', function () {
+                drawProcessedRect(MIARect);
+            });
 
         }
     </script>
@@ -131,7 +144,7 @@
         <!-- Image displayed for cropping -->
         <div id="wrap" style="width:0px">
             <img id="image" hidden src="">
-            <div id ="cropArea" hidden style="top:0px;left:0px;width:100px;height:100px"></div>
+            <div id ="cropArea" style="top:0px;left:0px;width:100px;height:100px"></div>
         </div>
         <!-- Button for navigation-->
         <img id="next" src="../static/images/next-btn.png" />

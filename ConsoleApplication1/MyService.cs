@@ -70,7 +70,7 @@ namespace ConsoleApplication1
             if (type == null) type = "application/octet-stream";
             body.CopyTo(f);
             f.Dispose();
-            findMIA("File" + myFile);
+           //findMIA("File" + myFile);
             return new ImgRecord(myFile, name, type);
         }
 
@@ -125,24 +125,34 @@ namespace ConsoleApplication1
             ImgRecord r = sessions[session][int.Parse(index)];
             Stream fstream = safeOpen("File" + r.file);
             Bitmap image = new Bitmap(fstream);
-            Rectangle boundingArea = new MIAFinder().mostInterestingArea(image);
+            Rectangle MIARect = new MIAFinder().mostInterestingArea(image);
             /*
             String[] parts = imageFilePath.Split('-');
             String index = parts[0];
             String session = parts[1];
             */
+            
+            MIARect = trimRect(MIARect, image);
 
-            boundingArea = trimRect(boundingArea, image);
-
-            String styleText = "" + boundingArea.Top + ";" + boundingArea.Left + ";" + boundingArea.Width + ";" + boundingArea.Height;
             fstream.Dispose();
             image.Dispose();
+
+            //Rule of thirds 
+
+            Rectangle ROTRect = new Rectangle(10, 10, 30, 30);
+
+            //Most colorful 
+
+            Rectangle MCRect = new Rectangle(20, 10, 40, 40);
+
+            String styleText = "" + MIARect.Top + ";" + MIARect.Left + ";" + MIARect.Width + ";" + MIARect.Height +";" + ROTRect.Top + ";" + ROTRect.Left + ";" + ROTRect.Width + ";" + ROTRect.Height + ";" + +MCRect.Top + ";" + MCRect.Left + ";" + MCRect.Width + ";" + MCRect.Height ;
             return new MemoryStream(Encoding.UTF8.GetBytes(styleText));
         }
 
 
         //Finding Most interesting Part 
         MIAFinder MIAfinder = new MIAFinder();
+        
         void findMIA(String file)
         {
 
