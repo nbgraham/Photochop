@@ -10,21 +10,46 @@
         var count;
         var img;
         var session;
+        var cropping = false;
         
         // displays the next image or if on last image redirects to download page
         function nextImg() {
-            index++;
-            if (index >= count) {
-                window.location = 'DownloadPage.html?s=' + session + '&c=' + count;
+            if (cropping) {
+                alert("Still notifying server, please wait.");
                 return;
             }
-            img.src = "/File" + index + '/' + session;
-          
-
+            var s = document.getElementById('cropArea').style;
+            var req = new XMLHttpRequest();
+            req.open("GET", "/crop/" + index + "/" + session
+                + "?top=" + parseInt(s.top)
+                + "&left=" + parseInt(s.left)
+                + "&width=" + parseInt(s.width)
+                + "&height=" + parseInt(s.height));
+            req.onreadystatechange = function () {
+                if (req.readyState != XMLHttpRequest.DONE) return;
+                cropping = false;
+                if (req.status != 200) {
+                    alert("Cropping failed! Try again, maybe?\n\n" + req.responseText);
+                    return;
+                }
+                index++;
+                if (index >= count) {
+                    window.location = 'DownloadPage.html?s=' + session + '&c=' + count;
+                    return;
+                }
+                img.src = "/File" + index + '/' + session;
+                findMIA(index, session);
+            }
+            cropping = true;
+            req.send();
         }
 
         // displays the previous image
         function previousImg() {
+            alert("Not supported, someone needs to remove this button!");
+            return;
+            //Screwy now that we crop when 'next' is pressed
+            /*
             index--;
             if (index < 0) index++; // Do nothing -- Or possibly ask the user if they want to start over 
             else 
@@ -32,6 +57,7 @@
                 img.src = "/File" + index + '/' + session;
             
             }
+            */
         }
 
         function findMIA(index, session) {
@@ -42,24 +68,31 @@
                 if (req.readyState != XMLHttpRequest.DONE) return;
                 if (req.status != 200) {
                     console.log(req);
-                    alert('Upload failed!' + this.responseText); // alert for error, i.e. invalid session id
+                    //alert('Upload failed! ' + this.responseText); // alert for error, i.e. invalid session id
                     return;
                 }
 
                 // set size of crop area rectangle based off response
-                boundingAreaStyle = req.response;
+                var boundingAreaStyle = req.response;
+                console.log(boundingAreaStyle);
 
-                styleParts = boundingAreaStyle.split(';');
+                var styleParts = boundingAreaStyle.split(';');
+                var boundingArea = document.getElementById('cropArea');
 
+                /*
                 boundingAreaStyle = {
                     'top': styleParts[0],
                     'left': styleParts[1],
                     'width': styleParts[2],
                     'height': styleParts[3]
                 };
+                boundingArea.style = boundingAreaStyle;
+                */
 
-                boundingArea = document.getElementById('cropArea');
-                boundingArea.style.top = boundingAreaStyle;
+                boundingArea.style.top = styleParts[0] + "px";
+                boundingArea.style.left = styleParts[1] + "px";
+                boundingArea.style.width = styleParts[2] + "px";
+                boundingArea.style.height = styleParts[3] + "px";
                 boundingArea.removeAttribute('hidden');
             }
 

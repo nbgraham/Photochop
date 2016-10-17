@@ -32,6 +32,10 @@ namespace ConsoleApplication1
         [WebGet(UriTemplate = "File{number}/{session}")]
         Stream fileGet(string number, string session);
 
+        [OperationContract]
+        [WebGet(UriTemplate = "crop/{number}/{session}")]
+        void crop(string number, string session);
+
         //[OperationContract]
         //[WebInvoke(Method = "POST", BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "findMIA")]
         //Stream findMIA(string session, Stream body);

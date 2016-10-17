@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Drawing;
 using System.ServiceModel.Web;
-
+using System.Threading;
 
 namespace ConsoleApplication1
 {
@@ -64,9 +64,9 @@ namespace ConsoleApplication1
             int myFile = files++;
             var f = File.Create("File" + myFile);
 
-            string name = WebOperationContext.Current.IncomingRequest.UriTemplateMatch.QueryParameters["name"];
+            string name = getParam("name");
             if (name == null) name = "File" + myFile;
-            string type = WebOperationContext.Current.IncomingRequest.UriTemplateMatch.QueryParameters["type"];
+            string type = getParam("type");
             if (type == null) type = "application/octet-stream";
             body.CopyTo(f);
             f.Dispose();
@@ -108,7 +108,7 @@ namespace ConsoleApplication1
             ImgRecord r = sessions[session][int.Parse(number)];
             WebOperationContext.Current.OutgoingResponse.Headers.Add("Content-Disposition", "attachment; filename=\"" + r.name + "\"");
             WebOperationContext.Current.OutgoingResponse.ContentType = r.type;
-            return new FileStream("File" + r.file, FileMode.Open);
+            return safeOpen("File" + r.file);
         }
 
 
@@ -122,16 +122,21 @@ namespace ConsoleApplication1
 
         public Stream getMIA(string index, string session)
         {
+            ImgRecord r = sessions[session][int.Parse(index)];
+            Stream fstream = safeOpen("File" + r.file);
+            Bitmap image = new Bitmap(fstream);
+            Rectangle boundingArea = new MIAFinder().mostInterestingArea(image);
             /*
             String[] parts = imageFilePath.Split('-');
             String index = parts[0];
             String session = parts[1];
             */
 
-            Rectangle boundingArea = new Rectangle(0, 0, 50, 50);
+            boundingArea = trimRect(boundingArea, image);
 
             String styleText = "" + boundingArea.Top + ";" + boundingArea.Left + ";" + boundingArea.Width + ";" + boundingArea.Height;
-
+            fstream.Dispose();
+            image.Dispose();
             return new MemoryStream(Encoding.UTF8.GetBytes(styleText));
         }
 
@@ -166,8 +171,37 @@ namespace ConsoleApplication1
 
             //Another way to crop, produces out of memery since MIARect crosses image 
             //Note this will still produce an error 
-            Bitmap image = new Bitmap(file);
-            Rectangle rect = new MIAFinder().mostInterestingArea(image);
+        }
+
+        public void crop (string number, string session)
+        {
+            ImgRecord r = sessions[session][int.Parse(number)];
+            Bitmap image = new Bitmap("File" + r.file);
+            Rectangle rect = new Rectangle(int.Parse(getParam("left")), int.Parse(getParam("top")), int.Parse(getParam("width")), int.Parse(getParam("height")));
+            rect = trimRect(rect, image);
+
+            Image x = image.Clone(rect, image.PixelFormat);
+            image.Dispose();
+            x.Save("File" + r.file);
+            //Saves as png, so fix things.
+            r.type = "image/png";
+            int ix = r.name.LastIndexOf('.');
+            if (ix != -1) r.name = r.name.Substring(0, ix + 1) + "png";
+            x.Dispose();
+        }
+
+        Rectangle trimRect(Rectangle rect, Bitmap image)
+        {
+            if (rect.X > image.Width || rect.Y > image.Height
+                || rect.Width <= 0 || rect.Height <= 0
+                || rect.Right <= 0 || rect.Bottom <= 0)
+            {
+                rect.X = image.Width / 4;
+                rect.Y = image.Height / 4;
+                rect.Width = image.Width / 2;
+                rect.Height = image.Height / 2;
+                return rect;
+            }
             if (rect.X < 0)
             {
                 rect.Width += rect.X;
@@ -180,13 +214,29 @@ namespace ConsoleApplication1
             }
             if (rect.X + rect.Width > image.Width) rect.Width = image.Width - rect.X;
             if (rect.Y + rect.Height > image.Height) rect.Height = image.Height - rect.Y;
-
-            Image x = image.Clone(rect, image.PixelFormat);
-            x.Save(file + "9999");
-            x.Dispose();
-            image.Dispose();
+            return rect;
         }
 
+        String getParam(string key)
+        {
+            return WebOperationContext.Current.IncomingRequest.UriTemplateMatch.QueryParameters[key];
+        }
+
+        FileStream safeOpen(string path)
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                try
+                {
+                    FileStream ret = new FileStream(path, FileMode.Open);
+                    return ret;
+                }
+                catch (Exception) { }
+                Thread.Sleep(100);
+            }
+            //Hail Mary, or just throw the real exception
+            return new FileStream(path, FileMode.Open);
+        }
     }
 
     class ImgRecord

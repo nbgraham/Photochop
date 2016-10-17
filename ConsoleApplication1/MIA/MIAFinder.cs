@@ -31,6 +31,8 @@ namespace ConsoleApplication1
 
             Rectangle rect = getBoundContainingSDCenters(1, objs, center);
 
+            bitmap.Dispose();
+
             return rect;
         }
 

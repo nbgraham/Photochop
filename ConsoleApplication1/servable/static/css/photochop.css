@@ -110,12 +110,14 @@ ol, li {
 #image {
     display: inline-block;
     margin: 0 auto;
+    /* It's got to be pixel-perfect until we fix this...
     max-width: 600px;
     min-width: 100px;
     max-height: 600px;
     min-height: 100px;
     height: auto;
     width: auto;
+        */
 }
 
 /* Gallery Image */
@@ -163,4 +165,6 @@ ol, li {
 #cropArea {
     position: absolute;
     border:3px solid #ff0000;
+    margin-left: -3px;
+    margin-top: -3px;
 }
