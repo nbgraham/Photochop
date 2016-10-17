@@ -1,4 +1,5 @@
-﻿using ImageProcessor;
+﻿using AForge.Imaging;
+using ImageProcessor;
 using ImageProcessor.Imaging.Filters.EdgeDetection;
 using ImageProcessor.Imaging.Formats;
 using System;
@@ -13,63 +14,59 @@ using System.Threading.Tasks;
 namespace ConsoleApplication1
 {
     // this is the building block of our 2 algorithms
-  
+
     class MIAFinder
     {
-       public Rectangle mostInterestingArea(Image img)
+        public Rectangle mostInterestingArea(System.Drawing.Image img)
         {
-            byte[] photoBytes = imageToByteArray(img);
+            Bitmap bitmap = new Bitmap(img);
 
-            // Format is automatically detected though can be changed.
-            ISupportedImageFormat format = new JpegFormat { Quality = 70 };
-            Size size = new Size(150, 0);
+            BlobCounter bc = new BlobCounter();
 
-            Size resultingSize = new Size();
+            bc.ProcessImage(bitmap);
 
-            using (MemoryStream inStream = new MemoryStream(photoBytes))
-                        {
-                            using (MemoryStream outStream = new MemoryStream())
-                            {
-                                // Initialize the ImageFactory using the overload to preserve EXIF metadata.
-                                using (ImageFactory imageFactory = new ImageFactory(preserveExifData: true))
-                                {
-                                    // Load, resize, set the format and quality and save an image.
-                                    imageFactory.Load(inStream)
-                                                .Format(format)
-                                                .EntropyCrop();
+            Rectangle[] objs = bc.GetObjectsRectangles();
 
-                                    ImageFactory imgFactory = ObjectCopier.Clone(imageFactory);
+            Point center = getAverageRectangleCenter(objs);
 
-                                    imgFactory.DetectEdges(new Laplacian3X3EdgeFilter())
-                                                .EntropyCrop();
+            Rectangle rect = getBoundContainingSDCenters(1, objs, center);
 
-                                    //Need to crop, not resize
-                                    imageFactory.Resize(imgFactory.Image.Size);
-                                              
-                                    imageFactory.Save(outStream);
-
-                                    resultingSize = imageFactory.Image.Size;
-                                }
-                                // Do something with the stream.
-
-                            }
-                        }
-
-            return new Rectangle(new Point(), resultingSize);
+            return rect;
         }
 
-        private byte[] imageToByteArray(Image imageIn)
+        private Point getAverageRectangleCenter(Rectangle[] rects)
         {
-            MemoryStream ms = new MemoryStream();
-            imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-            return ms.ToArray();
+            int sumx = 0;
+            int sumy = 0;
+            int count = 0;
+
+            foreach (Rectangle rect in rects)
+            {
+                sumx += rect.X + rect.Width / 2;
+                sumy += rect.Y + rect.Height / 2;
+                count++;
+            }
+
+            return new Point(sumx / count, sumy / count);
         }
 
-        private Image byteArrayToImage(byte[] byteArrayIn)
+        private Rectangle getBoundContainingSDCenters(double sds, Rectangle[] rects, Point averageCenter)
         {
-            MemoryStream ms = new MemoryStream(byteArrayIn);
-            Image returnImage = Image.FromStream(ms);
-            return returnImage;
+            double sumx = 0;
+            double sumy = 0;
+            int count = 0;
+
+            foreach (Rectangle rect in rects)
+            {
+                sumx += Math.Pow((rect.X + rect.Width / 2) - averageCenter.X, 2);
+                sumy += Math.Pow((rect.Y + rect.Height / 2) - averageCenter.Y, 2);
+                count++;
+            }
+
+            double xDiff = sumx/(count - 1) * sds;
+            double yDiff = sumy/(count-1) * sds;
+
+            return new Rectangle(averageCenter, new Size((int)(xDiff * 2), (int)(yDiff * 2));
         }
     }
 }
