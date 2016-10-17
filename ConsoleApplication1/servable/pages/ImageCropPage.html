@@ -10,6 +10,7 @@
         var count;
         var img;
         var session;
+        
         function nextImg() {
             index++;
             if (index >= count) {
@@ -17,6 +18,8 @@
                 return;
             }
             img.src = "/File" + index + '/' + session;
+          
+
         }
 
         function previousImg() {
@@ -25,6 +28,7 @@
             else 
             {
                 img.src = "/File" + index + '/' + session;
+            
             }
         }
         window.onload = function () {

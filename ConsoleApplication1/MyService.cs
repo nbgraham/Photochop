@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Drawing; 
 using System.ServiceModel.Web;
+
 
 namespace ConsoleApplication1
 {
@@ -61,12 +63,14 @@ namespace ConsoleApplication1
         {
             int myFile = files++;
             var f = File.Create("File" + myFile);
+            
             string name = WebOperationContext.Current.IncomingRequest.UriTemplateMatch.QueryParameters["name"];
             if (name == null) name = "File" + myFile;
             string type = WebOperationContext.Current.IncomingRequest.UriTemplateMatch.QueryParameters["type"];
             if (type == null) type = "application/octet-stream";
             body.CopyTo(f);
             f.Dispose();
+            findMIA("File" + myFile);
             return new ImgRecord(myFile, name, type);
         }
 
@@ -107,12 +111,44 @@ namespace ConsoleApplication1
             return new FileStream("File" + r.file, FileMode.Open);
         }
 
+        
+
         Stream do404(OutgoingWebResponseContext response)
         {
             response.StatusCode = System.Net.HttpStatusCode.NotFound;
             response.ContentType = "text/html";
             return new FileStream("servable/errors/404.html", FileMode.Open);
         }
+
+
+        //Finding Most interesting Part 
+        MIAFinder MIAfinder = new MIAFinder();
+        void findMIA(String file)
+        {
+
+            //  System.Drawing.Image imageFile  =   System.Drawing.Image.FromFile(file);
+            using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read))
+            {
+                using (Image original = Image.FromStream(fs))
+                {
+                    Rectangle rect = MIAfinder.mostInterestingArea(original);
+
+                    Bitmap src = Image.FromFile(file) as Bitmap;
+                    Bitmap target = new Bitmap(rect.Width, rect.Height);
+
+                    using (Graphics g = Graphics.FromImage(target))
+                    {
+                        g.DrawImage(src, new Rectangle(0, 0, target.Width, target.Height),
+                                         rect,
+                                         GraphicsUnit.Pixel);
+                    }
+
+
+                }
+            }
+        //
+        }
+        
     }
 
     class ImgRecord

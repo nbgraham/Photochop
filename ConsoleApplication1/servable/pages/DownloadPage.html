@@ -18,7 +18,10 @@
             count = parseInt(session.substring(ix2 + 3));
             session = session.substring(ix1, ix2);
             gallery = document.getElementById('gallery');
-            // add the images
+
+            //Add all the processed Images 
+
+            // add the images 
             for (index = 0; index < count; index++)
                 gallery.innerHTML += '<img class="gImage" src="' + '/File' + index + '/' + session + '" />';
 

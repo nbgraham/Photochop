@@ -66,7 +66,7 @@ namespace ConsoleApplication1
             double xDiff = sumx/(count - 1) * sds;
             double yDiff = sumy/(count-1) * sds;
 
-            return new Rectangle(averageCenter, new Size((int)(xDiff * 2), (int)(yDiff * 2));
+            return new Rectangle(averageCenter, new Size((int)(xDiff * 2), (int)(yDiff * 2)));
         }
     }
 }

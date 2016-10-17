@@ -31,5 +31,12 @@ namespace ConsoleApplication1
         [OperationContract]
         [WebGet(UriTemplate = "File{number}/{session}")]
         Stream fileGet(string number, string session);
+
+        //[OperationContract]
+        //[WebInvoke(Method = "POST", BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "findMIA")]
+        //Stream findMIA(string session, Stream body);
+
+
+
     }
 }
