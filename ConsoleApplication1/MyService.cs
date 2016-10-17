@@ -167,10 +167,24 @@ namespace ConsoleApplication1
             //Another way to crop, produces out of memery since MIARect crosses image 
             //Note this will still produce an error 
             Bitmap image = new Bitmap(file);
-            Rectangle rect = new Rectangle(0, 0, 200, 200);
+            Rectangle rect = new MIAFinder().mostInterestingArea(image);
+            if (rect.X < 0)
+            {
+                rect.Width += rect.X;
+                rect.X = 0;
+            }
+            if (rect.Y < 0)
+            {
+                rect.Height += rect.Y;
+                rect.Y = 0;
+            }
+            if (rect.X + rect.Width > image.Width) rect.Width = image.Width - rect.X;
+            if (rect.Y + rect.Height > image.Height) rect.Height = image.Height - rect.Y;
+
             Image x = image.Clone(rect, image.PixelFormat);
             x.Save(file + "9999");
             x.Dispose();
+            image.Dispose();
         }
 
     }
