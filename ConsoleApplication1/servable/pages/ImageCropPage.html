@@ -11,6 +11,7 @@
         var img;
         var session;
         
+        // displays the next image or if on last image redirects to download page
         function nextImg() {
             index++;
             if (index >= count) {
@@ -22,9 +23,10 @@
 
         }
 
+        // displays the previous image
         function previousImg() {
             index--;
-            if (index < 0) index++; // Do nothing -- Or possibly ask the use if they want to start over 
+            if (index < 0) index++; // Do nothing -- Or possibly ask the user if they want to start over 
             else 
             {
                 img.src = "/File" + index + '/' + session;
@@ -35,11 +37,14 @@
             session = window.location.href;
             var ix1 = session.indexOf("?s=") + 3;
             var ix2 = session.indexOf("&c=");
+            // get the session and image count
             count = parseInt(session.substring(ix2 + 3));
             session = session.substring(ix1, ix2);
+            // display the first image for the session
             img = document.getElementById('image');
             img.src = "/File" + index + '/' + session;
             img.removeAttribute('hidden');
+            // add the button listeners
             document.getElementById('next').addEventListener('click', nextImg);
             document.getElementById('back').addEventListener('click', previousImg);
 
@@ -50,10 +55,13 @@
     <h1 style="margin: 0 auto;">Your Image</h1>
     <br /><br />
     <section>
+        <!-- Image displayed for cropping -->
         <img id="image" hidden src="" />
+        <!-- Button for navigation-->
         <img id="next" src="../static/images/next-btn.png" />
         <img id="back" src="../static/images/back-btn.png" />        
     </section>
+        <!-- Buttons for crop selection -->
     <section>
         <button id="ruleOfThirds">RULE OF THIRDS</button>
         <button id="mostColorfulArea">MOST COLORFUL AREA</button>

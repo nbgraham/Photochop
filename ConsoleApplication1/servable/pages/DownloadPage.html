@@ -15,6 +15,7 @@
             session = window.location.href;
             var ix1 = session.indexOf("?s=") + 3;
             var ix2 = session.indexOf("&c=");
+            // get the session and image count
             count = parseInt(session.substring(ix2 + 3));
             session = session.substring(ix1, ix2);
             gallery = document.getElementById('gallery');
@@ -43,8 +44,9 @@
     
     <h1 style="margin:0 auto">Your Images</h1><br />
     <section id="gallery">
-        
+        <!-- Images go here -->
     </section>
+        <!-- Buttons for navigation -->
     <section id="navigation">
         <button type="button" id="links">Direct Image Links</button>
         <button type="button" id="instagram">How to Upload to Instagram</button>

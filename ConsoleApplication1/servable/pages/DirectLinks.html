@@ -15,10 +15,11 @@
             session = window.location.href;
             var ix1 = session.indexOf("?s=") + 3;
             var ix2 = session.indexOf("&c=");
+            // get the session and count of images
             count = parseInt(session.substring(ix2 + 3));
             session = session.substring(ix1, ix2);
             gallery = document.getElementById('gallery');
-            // add the images
+            // add the images with the download link
             for (index = 0; index < count; index++) {
                 var src = '/File' + index + '/' + session;
 
@@ -47,6 +48,7 @@
     <section id="gallery" style="overflow-y:scroll; border-style:solid; height:600px">
        <!-- Images go hear -->
     </section>
+        <!-- Buttons for navigaion -->
     <section id="navigation">
         <button type="button" id="downloads">Regular Downloads</button>
         <button type="button" id="instagram">How to Upload to Instagram</button>
