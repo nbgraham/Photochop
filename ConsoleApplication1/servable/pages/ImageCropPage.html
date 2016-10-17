@@ -66,7 +66,7 @@
                 if (req.readyState != XMLHttpRequest.DONE) return;
                 if (req.status != 200) {
                     console.log(req);
-                    //alert('Upload failed! ' + this.responseText); // alert for error, i.e. invalid session id
+                    alert('Upload failed! ' + this.responseText); // alert for error, i.e. invalid session id
                     return;
                 }
 
@@ -144,7 +144,7 @@
         <!-- Image displayed for cropping -->
         <div id="wrap" style="width:0px">
             <img id="image" hidden src="">
-            <div id ="cropArea" style="top:0px;left:0px;width:100px;height:100px"></div>
+            <div id ="cropArea" hidden style="top:0px;left:0px;width:100px;height:100px"></div>
         </div>
         <!-- Button for navigation-->
         <img id="next" src="../static/images/next-btn.png" />

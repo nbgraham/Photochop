@@ -131,7 +131,7 @@ namespace ConsoleApplication1
             String index = parts[0];
             String session = parts[1];
             */
-            
+
             MIARect = trimRect(MIARect, image);
 
             fstream.Dispose();
