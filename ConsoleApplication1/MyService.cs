@@ -120,31 +120,31 @@ namespace ConsoleApplication1
             return new FileStream("servable/errors/404.html", FileMode.Open);
         }
 
+        MIAFinder miaFinder = new MIAFinder();
+        RuleOfThirds rotFinder = new RuleOfThirds();
+        MostColorArea mcaFinder = new MostColorArea(); 
         public Stream getMIA(string index, string session)
         {
             ImgRecord r = sessions[session][int.Parse(index)];
             Stream fstream = safeOpen("File" + r.file);
             Bitmap image = new Bitmap(fstream);
-            Rectangle MIARect = new MIAFinder().mostInterestingArea(image);
+            Rectangle MIARect = trimRect(miaFinder.mostInterestingArea(image), image);
             /*
             String[] parts = imageFilePath.Split('-');
             String index = parts[0];
             String session = parts[1];
             */
-
-            MIARect = trimRect(MIARect, image);
-
-            fstream.Dispose();
-            image.Dispose();
-
+          //  Bitmap image2 = ObjectCopier.Clone(image);
             //Rule of thirds 
-
-            Rectangle ROTRect = new Rectangle(10, 10, 30, 30);
+            Rectangle ROTRect = trimRect(rotFinder.mostInterestingArea(image), image);
 
             //Most colorful 
 
-            Rectangle MCRect = new Rectangle(20, 10, 40, 40);
-
+            //   Bitmap image3 = ObjectCopier.Clone(image);
+            Rectangle MCRect = trimRect(mcaFinder.mostInterestingArea(image), image);
+            //Rectangle MCRect = new Rectangle(10, 50, 10, 100);
+            fstream.Dispose();
+            image.Dispose();
             String styleText = "" + MIARect.Top + ";" + MIARect.Left + ";" + MIARect.Width + ";" + MIARect.Height +";" + ROTRect.Top + ";" + ROTRect.Left + ";" + ROTRect.Width + ";" + ROTRect.Height + ";" + +MCRect.Top + ";" + MCRect.Left + ";" + MCRect.Width + ";" + MCRect.Height ;
             return new MemoryStream(Encoding.UTF8.GetBytes(styleText));
         }
