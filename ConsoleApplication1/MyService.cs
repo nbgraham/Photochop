@@ -120,6 +120,19 @@ namespace ConsoleApplication1
             return new FileStream("servable/errors/404.html", FileMode.Open);
         }
 
+        Stream getMIA(String imageFilePath)
+        {
+            String[] parts = imageFilePath.Split('-');
+            String index = parts[0];
+            String session = parts[1];
+
+            Rectangle boundingArea = new Rectangle(0, 0, 50, 50);
+
+            String styleText = "top:" + boundingArea.Top + ";left:" + boundingArea.Bottom + ";width:" + boundingArea.Width + ";height:" + boundingArea.Height;
+
+            return new MemoryStream(Encoding.UTF8.GetBytes(styleText));
+        }
+
 
         //Finding Most interesting Part 
         MIAFinder MIAfinder = new MIAFinder();

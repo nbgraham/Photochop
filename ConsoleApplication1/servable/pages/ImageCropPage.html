@@ -33,6 +33,29 @@
             
             }
         }
+
+        function findMIA(index, session) {
+            var req = new XMLHttpRequest();
+            req.open("POST", "/getMIA?index=" + index + "&session=" + session);
+
+            req.onreadystatechange = function () {
+                if (req.readyState != XMLHttpRequest.DONE) return;
+                if (req.status != 200) {
+                    console.log(req);
+                    alert('Upload failed!' + this.responseText); // alert for error, i.e. invalid session id
+                    return;
+                }
+
+                // set size of crop area rectangle based off response
+                boundingAreaStyleString = req.response;
+
+                boundingArea = document.getElementById('cropArea');
+                boundingArea.style = boundingAreaStyleString;
+            }
+
+            req.send();
+        }
+
         window.onload = function () {
             session = window.location.href;
             var ix1 = session.indexOf("?s=") + 3;
@@ -48,6 +71,8 @@
 
             wrap = document.getElementById('wrap');
             wrap.style.width = img.style.width;
+
+            findMIA(index, session);
 
             // add the button listeners
             document.getElementById('next').addEventListener('click', nextImg);
