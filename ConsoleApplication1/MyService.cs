@@ -143,6 +143,7 @@ namespace ConsoleApplication1
                                          GraphicsUnit.Pixel);
                     }
 
+                    original.Save(file);
 
                 }
             }
