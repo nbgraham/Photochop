@@ -36,7 +36,8 @@ namespace ConsoleApplication1
         //[WebInvoke(Method = "POST", BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "findMIA")]
         //Stream findMIA(string session, Stream body);
 
-
-
+        [OperationContract]
+        [WebInvoke(Method = "POST", BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "getMIA/{index}/{session}")]
+        Stream getMIA(string index, string session);
     }
 }

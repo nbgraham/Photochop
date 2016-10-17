@@ -36,7 +36,7 @@
 
         function findMIA(index, session) {
             var req = new XMLHttpRequest();
-            req.open("POST", "/getMIA?index=" + index + "&session=" + session);
+            req.open("POST", "/getMIA/" + index + "/" + session);
 
             req.onreadystatechange = function () {
                 if (req.readyState != XMLHttpRequest.DONE) return;
@@ -47,10 +47,20 @@
                 }
 
                 // set size of crop area rectangle based off response
-                boundingAreaStyleString = req.response;
+                boundingAreaStyle = req.response;
+
+                styleParts = boundingAreaStyle.split(';');
+
+                boundingAreaStyle = {
+                    'top': styleParts[0],
+                    'left': styleParts[1],
+                    'width': styleParts[2],
+                    'height': styleParts[3]
+                };
 
                 boundingArea = document.getElementById('cropArea');
-                boundingArea.style = boundingAreaStyleString;
+                boundingArea.style.top = boundingAreaStyle;
+                boundingArea.removeAttribute('hidden');
             }
 
             req.send();
