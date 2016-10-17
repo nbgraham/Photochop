@@ -20,7 +20,18 @@ namespace ConsoleApplication1
         public Rectangle mostInterestingArea(System.Drawing.Image img)
         {
             Bitmap bitmap = new Bitmap(img);
+            return mostInterestingArea(bitmap);
+        }
 
+        public Rectangle mostInterestingArea(string filename)
+        {
+            //Broken
+            Bitmap bitmap = new Bitmap(filename);
+            return mostInterestingArea(bitmap);
+        }
+
+        private Rectangle mostInterestingArea(Bitmap bitmap)
+        {
             BlobCounter bc = new BlobCounter();
 
             bc.ProcessImage(bitmap);

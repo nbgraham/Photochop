@@ -122,17 +122,26 @@ namespace ConsoleApplication1
 
         public Stream getMIA(string index, string session)
         {
-            /*
-            String[] parts = imageFilePath.Split('-');
-            String index = parts[0];
-            String session = parts[1];
-            */
+            string filename = "/File" + index + "/" + session;
+                try
+                {
+                    Image img = Image.FromFile(filename);
 
-            Rectangle boundingArea = new Rectangle(0, 0, 50, 50);
+                    MIAResource resource = new MIAResource(img, default(MIAFinder));
 
-            String styleText = "" + boundingArea.Top + ";" + boundingArea.Left + ";" + boundingArea.Width + ";" + boundingArea.Height;
+                    Rectangle boundingArea = new Rectangle(0, 0, 50, 50);
 
-            return new MemoryStream(Encoding.UTF8.GetBytes(styleText));
+                    boundingArea = resource.mostInterestingArea();
+
+                    String styleText = "" + boundingArea.Top + ";" + boundingArea.Left + ";" + boundingArea.Width + ";" + boundingArea.Height;
+
+                    return new MemoryStream(Encoding.UTF8.GetBytes(styleText));
+                }
+                catch (FileNotFoundException e)
+                {
+                    Console.WriteLine('File not found:' + filename);
+                    return new MemoryStream();
+                }
         }
 
 
