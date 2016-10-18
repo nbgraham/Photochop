@@ -220,8 +220,9 @@ namespace ConsoleApplication1
         {
             List<Size> sizes = new List<Size>();
 
-            for (int height = 300; height < img.Height; height += 100)
-                for (int width = 300; width < img.Width; width += 100)
+
+            for (int height = img.Height/200 * 100; height < img.Height; height += 100)
+                for (int width = img.Width/200 * 100; width < img.Width; width += 100)
                 {
                     Size size = new Size(width, height);
 
@@ -240,8 +241,8 @@ namespace ConsoleApplication1
 
             foreach (Size size in sizes)
             {
-                for (int y = 0; y + size.Height < img.Height; y += 200)
-                    for (int x = 0; x + size.Width < img.Width; x += 200)
+                for (int y = 0; y + size.Height < img.Height; y += 100)
+                    for (int x = 0; x + size.Width < img.Width; x += 100)
                     {
                         Rectangle area = new Rectangle(x, y, size.Width, size.Height);
                         //Console.WriteLine(area);
