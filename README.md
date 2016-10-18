@@ -37,4 +37,4 @@ or
 to see our handiwork!  
 
 -----
-Uses [ImageProcessor](http://imageprocessor.org) library, specifically the [ImageFactory class](http://imageprocessor.org/imageprocessor/imagefactory/) and [Aforge.NET](http://www.aforgenet.com/).
+Uses [ImageProcessor](http://imageprocessor.org) library (specifically the [ImageFactory class](http://imageprocessor.org/imageprocessor/imagefactory/)) and [Aforge.NET](http://www.aforgenet.com/).
