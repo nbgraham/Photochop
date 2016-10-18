@@ -10,6 +10,9 @@
         var count;
         var img;
         var session;
+        var MCRect;
+        var MIARect;
+        var ROFRect; 
         
         // displays the next image or if on last image redirects to download page
         function nextImg() {
@@ -19,22 +22,29 @@
                 return;
             }
             img.src = "/File" + index + '/' + session;
+            findMIA(index, session);
+
           
 
         }
 
-        // displays the previous image
-        function previousImg() {
-            index--;
-            if (index < 0) index++; // Do nothing -- Or possibly ask the user if they want to start over 
-            else 
-            {
-                img.src = "/File" + index + '/' + session;
-            
-            }
-        }
+        
+     
+        function drawProcessedRect(boundingRect)
+        {
+            console.log(boundingRect);
+            boundingArea = document.getElementById('cropArea');
+            boundingArea.style.top = boundingRect.top + 'px';
+            boundingArea.style.left = boundingRect.left + 'px';
+            boundingArea.style.width = boundingRect.width + 'px';
+            boundingArea.style.height = boundingRect.height + 'px';
 
-        function findMIA(index, session) {
+           
+            boundingArea.removeAttribute('hidden');
+
+
+        }
+        function processImage(index, session) {
             var req = new XMLHttpRequest();
             req.open("POST", "/getMIA/" + index + "/" + session);
 
@@ -47,20 +57,37 @@
                 }
 
                 // set size of crop area rectangle based off response
-                boundingAreaStyle = req.response;
+               var  boundingAreaStyle = req.response;
+               console.log(req.response);
+               var styleParts = boundingAreaStyle.split(';');
 
-                styleParts = boundingAreaStyle.split(';');
-
-                boundingAreaStyle = {
+               MIARect = ''; 
+                MIARect = {
                     'top': styleParts[0],
                     'left': styleParts[1],
                     'width': styleParts[2],
                     'height': styleParts[3]
                 };
 
-                boundingArea = document.getElementById('cropArea');
-                boundingArea.style.top = boundingAreaStyle;
-                boundingArea.removeAttribute('hidden');
+                ROFRect = ''; 
+                ROFRect = {
+                    'top': styleParts[4],
+                    'left': styleParts[5],
+                    'width': styleParts[6],
+                    'height': styleParts[7]
+                };
+
+                MCRect = ''; 
+                MCRect = {
+                    'top': styleParts[8],
+                    'left': styleParts[9],
+                    'width': styleParts[10],
+                    'height': styleParts[11]
+                };
+
+
+
+
             }
 
             req.send();
@@ -82,11 +109,20 @@
             wrap = document.getElementById('wrap');
             wrap.style.width = img.style.width;
 
-            findMIA(index, session);
+            processImage(index, session);
 
             // add the button listeners
             document.getElementById('next').addEventListener('click', nextImg);
-            document.getElementById('back').addEventListener('click', previousImg);
+         //   document.getElementById('back').addEventListener('click', previousImg);
+            document.getElementById('ruleOfThirds').addEventListener('click', function () {
+                drawProcessedRect(ROFRect);
+            });
+            document.getElementById('mostColorfulArea').addEventListener('click', function () {
+                drawProcessedRect(MCRect);
+            });
+            document.getElementById('mostInterestingArea').addEventListener('click', function () {
+                drawProcessedRect(MIARect);
+            });
 
         }
     </script>
