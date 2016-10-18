@@ -1,6 +1,18 @@
 # Photochop
 Project for OU Software Engineering Fall 2016
 
+------
+###Getting started (on Windows)
+
+1. `git clone https://github.com/nbgraham/Photochop.git`
+2. Open administrator level command prompt  
+    - Find your username with `net user`
+    - Get access to local host port 800 with `netsh http add urlacl url=http://+:800/ user=[username]`  
+          e.g. `netsh http add urlacl url=http://+:800/ user=Simon`
+3. Run the solution in Visual Studio
+4. Navigate to [homepage](localhost:800/servable/pages/Homepage.html) at localhost:800/servable/pages/Homepage.html  
+
+------
 Likely issues and how to fix them:
 
 First of all, this is a Visual Studio 2015 project.
@@ -25,4 +37,5 @@ or
 "localhost/servable/pages/Homepage.html"
 to see our handiwork!  
 
+-----
 Uses [ImageProcessor](http://imageprocessor.org) library, specifically the [ImageFactory class](http://imageprocessor.org/imageprocessor/imagefactory/) and [Aforge.NET](http://www.aforgenet.com/).
