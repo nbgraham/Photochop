@@ -69,6 +69,7 @@ namespace ConsoleApplication1
             string type = WebOperationContext.Current.IncomingRequest.UriTemplateMatch.QueryParameters["type"];
             if (type == null) type = "application/octet-stream";
             body.CopyTo(f);
+            f.Close(); 
             f.Dispose();
            //findMIA("File" + myFile);
             return new ImgRecord(myFile, name, type);
@@ -120,6 +121,9 @@ namespace ConsoleApplication1
             return new FileStream("servable/errors/404.html", FileMode.Open);
         }
 
+        MIAFinder miaFinder = new MIAFinder();
+        RuleOfThirds rotFinder = new RuleOfThirds();
+        MostColorArea mcaFinder = new MostColorArea(); 
         public Stream getMIA(string index, string session)
         {
             /*
@@ -128,23 +132,26 @@ namespace ConsoleApplication1
             String session = parts[1];
             */
 
-            Rectangle MIARect = new Rectangle(0, 0, 50, 50);
+
+            Bitmap image = new Bitmap("File"+ index);
 
 
-            //     String styleText = "" + boundingArea.Top + ";" + boundingArea.Left + ";" + boundingArea.Width + ";" + boundingArea.Height;
+            Rectangle MIARect = miaFinder.mostInterestingArea(image);
+            //Rectangle MIARect = new Rectangle(0, 0, 100, 300);
 
+
+          //  Bitmap image2 = ObjectCopier.Clone(image);
             //Rule of thirds 
-
-            Rectangle ROTRect = new Rectangle(10, 10, 30, 30);
+            Rectangle ROTRect = rotFinder.mostInterestingArea(image);
 
             //Most colorful 
 
-            Rectangle MCRect = new Rectangle(20, 10, 40, 40);
-
-
-
+            //   Bitmap image3 = ObjectCopier.Clone(image);
+            Rectangle MCRect = mcaFinder.mostInterestingArea(image);
+            //Rectangle MCRect = new Rectangle(10, 50, 10, 100);
 
             String styleText = "" + MIARect.Top + ";" + MIARect.Left + ";" + MIARect.Width + ";" + MIARect.Height +";" + ROTRect.Top + ";" + ROTRect.Left + ";" + ROTRect.Width + ";" + ROTRect.Height + ";" + +MCRect.Top + ";" + MCRect.Left + ";" + MCRect.Width + ";" + MCRect.Height ;
+            image.Dispose();
             return new MemoryStream(Encoding.UTF8.GetBytes(styleText));
         }
 
