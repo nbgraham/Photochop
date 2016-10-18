@@ -70,7 +70,7 @@ namespace ConsoleApplication1
             if (type == null) type = "application/octet-stream";
             body.CopyTo(f);
             f.Dispose();
-           //findMIA("File" + myFile);
+            //findMIA("File" + myFile);
             return new ImgRecord(myFile, name, type);
         }
 
@@ -122,7 +122,7 @@ namespace ConsoleApplication1
 
         MIAFinder miaFinder = new MIAFinder();
         RuleOfThirds rotFinder = new RuleOfThirds();
-        MostColorArea mcaFinder = new MostColorArea(); 
+        MostColorArea mcaFinder = new MostColorArea();
         public Stream getMIA(string index, string session)
         {
             ImgRecord r = sessions[session][int.Parse(index)];
@@ -134,7 +134,7 @@ namespace ConsoleApplication1
             String index = parts[0];
             String session = parts[1];
             */
-          //  Bitmap image2 = ObjectCopier.Clone(image);
+            //  Bitmap image2 = ObjectCopier.Clone(image);
             //Rule of thirds 
             Rectangle ROTRect = trimRect(rotFinder.mostInterestingArea(image), image);
 
@@ -145,14 +145,14 @@ namespace ConsoleApplication1
             //Rectangle MCRect = new Rectangle(10, 50, 10, 100);
             fstream.Dispose();
             image.Dispose();
-            String styleText = "" + MIARect.Top + ";" + MIARect.Left + ";" + MIARect.Width + ";" + MIARect.Height +";" + ROTRect.Top + ";" + ROTRect.Left + ";" + ROTRect.Width + ";" + ROTRect.Height + ";" + +MCRect.Top + ";" + MCRect.Left + ";" + MCRect.Width + ";" + MCRect.Height ;
+            String styleText = "" + MIARect.Top + ";" + MIARect.Left + ";" + MIARect.Width + ";" + MIARect.Height + ";" + ROTRect.Top + ";" + ROTRect.Left + ";" + ROTRect.Width + ";" + ROTRect.Height + ";" + +MCRect.Top + ";" + MCRect.Left + ";" + MCRect.Width + ";" + MCRect.Height;
             return new MemoryStream(Encoding.UTF8.GetBytes(styleText));
         }
 
 
         //Finding Most interesting Part 
         MIAFinder MIAfinder = new MIAFinder();
-        
+
         void findMIA(String file)
         {
 
@@ -183,21 +183,28 @@ namespace ConsoleApplication1
             //Note this will still produce an error 
         }
 
-        public void crop (string number, string session)
+        public void crop(string number, string session)
         {
-            ImgRecord r = sessions[session][int.Parse(number)];
-            Bitmap image = new Bitmap("File" + r.file);
-            Rectangle rect = new Rectangle(int.Parse(getParam("left")), int.Parse(getParam("top")), int.Parse(getParam("width")), int.Parse(getParam("height")));
-            rect = trimRect(rect, image);
+            try
+            {
+                ImgRecord r = sessions[session][int.Parse(number)];
+                Bitmap image = new Bitmap("File" + r.file);
+                Rectangle rect = new Rectangle(int.Parse(getParam("left")), int.Parse(getParam("top")), int.Parse(getParam("width")), int.Parse(getParam("height")));
+                rect = trimRect(rect, image);
 
-            Image x = image.Clone(rect, image.PixelFormat);
-            image.Dispose();
-            x.Save("File" + r.file);
-            //Saves as png, so fix things.
-            r.type = "image/png";
-            int ix = r.name.LastIndexOf('.');
-            if (ix != -1) r.name = r.name.Substring(0, ix + 1) + "png";
-            x.Dispose();
+                Image x = image.Clone(rect, image.PixelFormat);
+                image.Dispose();
+                x.Save("File" + r.file);
+                //Saves as png, so fix things.
+                r.type = "image/png";
+                int ix = r.name.LastIndexOf('.');
+                if (ix != -1) r.name = r.name.Substring(0, ix + 1) + "png";
+                x.Dispose();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
         }
 
         Rectangle trimRect(Rectangle rect, Bitmap image)
@@ -242,10 +249,10 @@ namespace ConsoleApplication1
                     return ret;
                 }
                 catch (Exception) { }
-                Thread.Sleep(100);
+                Thread.Sleep(1000);
             }
-            //Hail Mary, or just throw the real exception
-            return new FileStream(path, FileMode.Open);
+            //LOAD ERROR IMAGE
+            return new FileStream("servable/static/images/ErrorImage.png", FileMode.Open);
         }
     }
 

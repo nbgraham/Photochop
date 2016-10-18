@@ -111,10 +111,10 @@
     <Content Include="servable\static\images\back-btn.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="servable\static\images\next-btn.png">
+    <Content Include="servable\static\images\ErrorImage.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="servable\static\images\upload_button.png">
+    <Content Include="servable\static\images\next-btn.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
