@@ -26,7 +26,7 @@ Likely issues and how to fix them:
     - Otherwise the server won't find the file.
 
 - The first time you run the program, you're likely to get an error about insufficient permissions for the address. This can be fixed by running the following from an administrator-level command line:  
-    `netsh http add urlacl url=http://+:80/ user=Simon`
+    `netsh http add urlacl url=http://+:800/ user=Simon`
 
     Of course you'll have to change the "user" parameter to match your username, as given by "net user" command.
 
