@@ -66,7 +66,7 @@ namespace ConsoleApplication1
 
             int count = (bound.Width / tileSize.Width) *
                         (bound.Height / tileSize.Height);
-
+            if (count == 0) return 0;
             return sum / count;
         }
 
@@ -88,7 +88,7 @@ namespace ConsoleApplication1
 
             int count = (bound.Width / tileSize.Width) *
                         (bound.Height / tileSize.Height);
-
+            if (count == 0) return 0;
             return sum / count;
         }
 
@@ -147,7 +147,7 @@ namespace ConsoleApplication1
 
             int count = (bound.Width / tileSize.Width) *
                         (bound.Height / tileSize.Height);
-
+            if (count == 0) return 0;
             return sumMeanRG / count;
         }
 
@@ -166,7 +166,7 @@ namespace ConsoleApplication1
 
             int count = (bound.Width / tileSize.Width) *
                         (bound.Height / tileSize.Height);
-
+            if (count == 0) return 0;
             return sumMeanYB / count;
         }
 
