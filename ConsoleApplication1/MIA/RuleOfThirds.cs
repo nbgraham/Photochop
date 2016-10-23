@@ -11,8 +11,12 @@ namespace ConsoleApplication1
 {
     class RuleOfThirds : MIAFinder
     {
-        new public Rectangle mostInterestingArea(System.Drawing.Image img)
+        new public Rectangle mostInterestingArea(System.Drawing.Image img_orig)
         {
+            // http://stackoverflow.com/questions/2016406/converting-bitmap-pixelformats-in-c-sharp
+            Bitmap img_middle = new Bitmap(img_orig);
+            Bitmap img = img_middle.Clone(new Rectangle(0, 0, img_middle.Width, img_middle.Height), System.Drawing.Imaging.PixelFormat.Format32bppRgb);
+            img_middle.Dispose();
             Bitmap bitmap = PreProcess((Bitmap)img);
             
             BlobCounter bc = new BlobCounter();
@@ -30,7 +34,9 @@ namespace ConsoleApplication1
 
             List<Rectangle> _areas = areas(img, _sizes);
 
-            return bestRuleOfThirdsBound(objs, _areas, img);
+            var ret = bestRuleOfThirdsBound(objs, _areas, img);
+            img.Dispose();
+            return ret;
         }
 
         private Rectangle[] filteredObjects(Rectangle[] objs, 
