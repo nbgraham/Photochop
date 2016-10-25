@@ -51,9 +51,10 @@
                     alert('File "' + f.name + '" isn\'t a .png, .gif, or .jpg. Convert this file, or pick another.');
                     return;
                 }
-                else if (f.size > 15000000) {
-                    alert('File "' + f.name + '" should be less than 10MB. Please make another selection.');
-                    return;
+                else if(f.size > 15000000)
+                {
+	                alert('File "' + f.name + '" should be less than 15MB. Please make another selection.');
+	                return;
                 }
                 str += '\n' + f.name;
             }
