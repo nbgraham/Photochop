@@ -128,6 +128,10 @@ namespace ConsoleApplication1
             ImgRecord r = sessions[session][int.Parse(index)];
             Stream fstream = safeOpen("File" + r.file);
             Bitmap image = new Bitmap(fstream);
+
+            int width = image.Size.Width;
+            int height = image.Size.Height;
+
             Rectangle MIARect = trimRect(miaFinder.mostInterestingArea(image), image);
             /*
             String[] parts = imageFilePath.Split('-');
@@ -145,7 +149,8 @@ namespace ConsoleApplication1
             //Rectangle MCRect = new Rectangle(10, 50, 10, 100);
             fstream.Dispose();
             image.Dispose();
-            String styleText = "" + MIARect.Top + ";" + MIARect.Left + ";" + MIARect.Width + ";" + MIARect.Height + ";" + ROTRect.Top + ";" + ROTRect.Left + ";" + ROTRect.Width + ";" + ROTRect.Height + ";" + +MCRect.Top + ";" + MCRect.Left + ";" + MCRect.Width + ";" + MCRect.Height;
+            String styleText = "" + MIARect.Top + ";" + MIARect.Left + ";" + MIARect.Width + ";" + MIARect.Height + ";" + ROTRect.Top + ";" + ROTRect.Left + ";" + ROTRect.Width + ";" + ROTRect.Height + ";" + +MCRect.Top + ";" + MCRect.Left + ";" + MCRect.Width + ";" + MCRect.Height
+                + ";" + width + ";" + height;
             return new MemoryStream(Encoding.UTF8.GetBytes(styleText));
         }
 

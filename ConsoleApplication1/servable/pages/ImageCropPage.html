@@ -14,6 +14,11 @@
         var MCRect;
         var MIARect;
         var ROFRect;
+
+        var newImageWidth;
+
+        var maxWidth = 750;
+        var maxHeight = 500;
         
         // displays the next image or if on last image redirects to download page
         function nextImg() {
@@ -51,6 +56,9 @@
      
         function drawProcessedRect(boundingRect)
         {
+            var image = document.getElementById('image');
+            image.style.width = newImageWidth + 'px';
+
             boundingArea = document.getElementById('cropArea');
             boundingArea.style.top = boundingRect.top + 'px';
             boundingArea.style.left = boundingRect.left + 'px';
@@ -79,24 +87,43 @@
                 var  boundingAreaStyle = req.response;
                 var styleParts = boundingAreaStyle.split(';');
 
+                var imageWidth = styleParts[12];
+                var imageHeight = styleParts[13];
+
+                var scaleFactor = 1.0;
+
+                var widthRatio = imageWidth / maxWidth;
+                var heightRatio = imageHeight / maxHeight;
+
+                if (widthRatio > 1 || heightRatio > 1) {
+                    if (widthRatio > heightRatio) {
+                        scaleFactor = widthRatio;
+                    } else {
+                        scaleFactor = heightRatio;
+                    }
+                }
+
+                newImageWidth = imageWidth / scaleFactor;
+
                 MIARect = {
-                    'top': styleParts[0],
-                    'left': styleParts[1],
-                    'width': styleParts[2],
-                    'height': styleParts[3]
+                    'top': styleParts[0] / scaleFactor,
+                    'left': styleParts[1] / scaleFactor,
+                    'width': styleParts[2] / scaleFactor,
+                    'height': styleParts[3] / scaleFactor
                 };
                 ROFRect = {
-                    'top': styleParts[4],
-                    'left': styleParts[5],
-                    'width': styleParts[6],
-                    'height': styleParts[7]
+                    'top': styleParts[4] / scaleFactor,
+                    'left': styleParts[5] / scaleFactor,
+                    'width': styleParts[6] / scaleFactor,
+                    'height': styleParts[7] / scaleFactor
                 };
                 MCRect = {
-                    'top': styleParts[8],
-                    'left': styleParts[9],
-                    'width': styleParts[10],
-                    'height': styleParts[11]
+                    'top': styleParts[8] / scaleFactor,
+                    'left': styleParts[9] / scaleFactor,
+                    'width': styleParts[10] / scaleFactor,
+                    'height': styleParts[11] / scaleFactor
                 };
+
                 drawProcessedRect(MIARect);
             }
 
