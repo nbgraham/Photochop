@@ -125,12 +125,26 @@ ol, li {
     font-family: Arial;
     width: 200px;
     color: #ffffff;
-    font-size: 12px;
+    font-size: 14px;
     background: #6d00ff;
 }
 
 #ruleOfThirds:hover, #mostColorfulArea:hover, #mostInterestingArea:hover {
     background: #903cff;
+}
+
+#links, #downloads, #instagram, #more {
+    padding: 5px;
+    margin: 5px auto;
+    font-family: Arial;
+    width: 220px;
+    color: #ffffff;
+    font-size: 16px;
+    background: #ff0087;
+}
+
+#links:hover , #downloads:hover, #instagram:hover, #more:hover {
+    background: #ff53ae;
 }
 
 /* Image for the Crop Page*/
