@@ -31,10 +31,10 @@
             var s = document.getElementById('cropArea').style;
             var req = new XMLHttpRequest();
             req.open("GET", "/crop/" + index + "/" + session
-                + "?top=" + (parseInt(s.top) * scaleFactor)
-                + "&left=" + (parseInt(s.left) * scaleFactor)
-                + "&width=" + (parseInt(s.width) * scaleFactor)
-                + "&height=" + (parseInt(s.height) * scaleFactor));
+                + "?top=" + Math.round(parseInt(s.top) * scaleFactor)
+                + "&left=" + Math.round(parseInt(s.left) * scaleFactor)
+                + "&width=" + Math.round(parseInt(s.width) * scaleFactor)
+                + "&height=" + Math.round(parseInt(s.height) * scaleFactor));
             req.onreadystatechange = function () {
                 if (req.readyState != XMLHttpRequest.DONE) return;
                 cropping = false;

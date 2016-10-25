@@ -59,9 +59,19 @@ namespace ConsoleApplication1
         }
 
         static int files = 0;
+        static object key = new object();
+        static int nextFile()
+        {
+            lock(key)
+            {
+                files++;
+                return files;
+            }
+        }
+
         ImgRecord upload(Stream body)
         {
-            int myFile = files++;
+            int myFile = nextFile();
             var f = File.Create("File" + myFile);
 
             string name = getParam("name");
@@ -199,6 +209,7 @@ namespace ConsoleApplication1
 
                 Image x = image.Clone(rect, image.PixelFormat);
                 image.Dispose();
+                r.file = nextFile();
                 x.Save("File" + r.file);
                 //Saves as png, so fix things.
                 r.type = "image/png";
@@ -218,10 +229,10 @@ namespace ConsoleApplication1
                 || rect.Width <= 0 || rect.Height <= 0
                 || rect.Right <= 0 || rect.Bottom <= 0)
             {
-                rect.X = image.Width / 4;
-                rect.Y = image.Height / 4;
-                rect.Width = image.Width / 2;
-                rect.Height = image.Height / 2;
+                rect.X = 0;
+                rect.Y = 0;
+                rect.Width = image.Width;
+                rect.Height = image.Height;
                 return rect;
             }
             if (rect.X < 0)
@@ -246,7 +257,7 @@ namespace ConsoleApplication1
 
         FileStream safeOpen(string path)
         {
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 8; i++)
             {
                 try
                 {
