@@ -17,8 +17,8 @@
 
         var newImageWidth;
 
-        var maxWidth = 750;
-        var maxHeight = 500;
+        var maxWidth = window.innerWidth * 0.6;
+        var maxHeight = window.innerHeight * 0.75;
         
         // displays the next image or if on last image redirects to download page
         function nextImg() {
@@ -175,7 +175,7 @@
         </div>
         <!-- Button for navigation-->
         <img id="next" src="../static/images/next-btn.png" />
-        <img id="back" src="../static/images/back-btn.png" />        
+        <img id="back" src="../static/images/back-btn.png" style="margin-right:75px;"/>        
     </section>
         <!-- Buttons for crop selection -->
     <section>
