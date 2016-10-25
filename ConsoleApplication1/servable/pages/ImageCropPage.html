@@ -19,6 +19,8 @@
 
         var maxWidth = window.innerWidth * 0.6;
         var maxHeight = window.innerHeight * 0.75;
+
+        var scaleFactor = 1.0;
         
         // displays the next image or if on last image redirects to download page
         function nextImg() {
@@ -29,10 +31,10 @@
             var s = document.getElementById('cropArea').style;
             var req = new XMLHttpRequest();
             req.open("GET", "/crop/" + index + "/" + session
-                + "?top=" + parseInt(s.top)
-                + "&left=" + parseInt(s.left)
-                + "&width=" + parseInt(s.width)
-                + "&height=" + parseInt(s.height));
+                + "?top=" + (parseInt(s.top) * scaleFactor)
+                + "&left=" + (parseInt(s.left) * scaleFactor)
+                + "&width=" + (parseInt(s.width) * scaleFactor)
+                + "&height=" + (parseInt(s.height) * scaleFactor));
             req.onreadystatechange = function () {
                 if (req.readyState != XMLHttpRequest.DONE) return;
                 cropping = false;
@@ -90,7 +92,7 @@
                 var imageWidth = styleParts[12];
                 var imageHeight = styleParts[13];
 
-                var scaleFactor = 1.0;
+                scaleFactor = 1.0;
 
                 var widthRatio = imageWidth / maxWidth;
                 var heightRatio = imageHeight / maxHeight;
