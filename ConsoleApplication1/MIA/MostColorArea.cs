@@ -16,10 +16,14 @@ namespace ConsoleApplication1
 
         Size tileSize;
         int pixelsInTile;
+        int width;
+        int height;
 
         public Rectangle mostInterestingArea(Image img)
         {
             Bitmap bitmap = new Bitmap(img);
+            width = img.Width;
+            height = img.Height;
 
             List<Size> _sizes = sizes(img);
 
@@ -257,25 +261,27 @@ namespace ConsoleApplication1
 
         private Rectangle mostColorfulArea(List<Rectangle> areas)
         {
-            double maxColorfulness = 0;
+            Rectangle mostColorfulArea = areas[0];
+            double maxColorfulness = Colorfulness(areas[0]);
 
-            Rectangle mostColorfulArea = default(Rectangle);
+            bool solid = true;
 
-            int i = 0;
-            foreach (Rectangle area in areas)
+            for (int i = 1; i < areas.Count; i++)
             {
                 Console.WriteLine("Progress: " + i + "/" + areas.Count);
-                i++;
 
-                double colorfulness = Colorfulness(area);
+                double colorfulness = Colorfulness(areas[i]);
 
-                if (maxColorfulness <= colorfulness)
+                if (maxColorfulness < colorfulness)
                 {
                     maxColorfulness = colorfulness;
-                    mostColorfulArea = area;
+                    mostColorfulArea = areas[i];
+                    solid = false;
                 }
             }
 
+            if (solid)
+                return new Rectangle(0, 0, width, height);
             return mostColorfulArea;
         }
 
