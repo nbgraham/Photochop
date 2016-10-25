@@ -25,13 +25,12 @@
                     return;
                 }
                 // more uploads!
-                nextUpload(count+1);
+                nextUpload(count + 1);
             }
             req.send(fInput.files[count]); // sends request
         }
         // fires when "upload" button clicked
-        function mySubmit(evnt) {
-            evnt.preventDefault();
+        function mySubmit() {
             // checks that files have been selected
             if (fInput.files.length == 0) {
                 alert("Please click 'Choose File(s)' first!");
@@ -52,10 +51,9 @@
                     alert('File "' + f.name + '" isn\'t a .png, .gif, or .jpg. Convert this file, or pick another.');
                     return;
                 }
-                else if(f.size > 15000000)
-                {
-	                alert('File "' + f.name + '" should be less than 10MB. Please make another selection.');
-	                return;
+                else if (f.size > 15000000) {
+                    alert('File "' + f.name + '" should be less than 10MB. Please make another selection.');
+                    return;
                 }
                 str += '\n' + f.name;
             }
@@ -63,7 +61,7 @@
             if (!window.confirm(str)) return;
             // gets session id using POST request
             var req = new XMLHttpRequest();
-            req.open("POST", "/initUpload?type="+fInput.files[0].type+"&name="+fInput.files[0].name);
+            req.open("POST", "/initUpload?type=" + fInput.files[0].type + "&name=" + fInput.files[0].name);
             req.onreadystatechange = function () {
                 if (req.readyState != XMLHttpRequest.DONE) return;
                 if (req.status != 200) {
@@ -83,18 +81,21 @@
         // basic initialization
         window.onload = function () {
             fInput = document.getElementById('file');
-            document.getElementById('myForm').addEventListener('submit', mySubmit);
+
+            fInput.onclick = function () {
+                this.value = null;
+            }
+            fInput.onchange = function () {
+                mySubmit();
+            }
         }
     </script>
 </head>
 <body>
     <h1>PhotoChop</h1>
     <section>
-        <form id="myForm" enctype="multipart/form-data" method="post" name="fileinfo">
-            <input type="submit" id="upload" value="Upload" />
             <input type="file" id="file" name="file" accept=".png,.jpeg,.jpg,.gif" multiple required />
-            <label for="file" id="flabel">Choose File(s)</label>
-        </form>
+            <label for="file" id="flabel">Import Image(s)</label>
         <p id="slogan">We discover the best parts of your picture</p>
     </section>
 </body>

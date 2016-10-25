@@ -150,7 +150,6 @@
 
             // add the button listeners
             document.getElementById('next').addEventListener('click', nextImg);
-         //   document.getElementById('back').addEventListener('click', previousImg);
             document.getElementById('ruleOfThirds').addEventListener('click', function () {
                 drawProcessedRect(ROFRect);
             });
@@ -173,15 +172,16 @@
             <img id="image" hidden src="">
             <div id ="cropArea" style="top:0px;left:0px;width:100px;height:100px"></div>
         </div>
-        <!-- Button for navigation-->
-        <img id="next" src="../static/images/next-btn.png" />
-        <img id="back" src="../static/images/back-btn.png" style="margin-right:75px;"/>        
     </section>
         <!-- Buttons for crop selection -->
     <section>
         <button id="ruleOfThirds">RULE OF THIRDS</button>
         <button id="mostColorfulArea">MOST COLORFUL AREA</button>
         <button id="mostInterestingArea">MOST INTERESTING AREA</button>
+        <!-- Button for navigation
+        <img id="next" disabled src="../static/images/next-btn.png" />
+            -->
+        <button id="next">Next Image</button>
     </section>
 </body>
 </html>

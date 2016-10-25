@@ -51,15 +51,15 @@ ol, li {
     border-left: 2px solid #f3f3f3;    
     padding: 10px;
     font-family: Arial;
-    width: 140px;
+    width: 200px;
     color: #ffffff;
     font-size: 20px;
-    background: #da4141;
+    background: #0097ff;
     margin: 5px auto;
 }
 
 #flabel:hover {
-    background: #db6c6c;
+    background: #4ab5ff;
 }
 
 #flabel:active {
@@ -69,7 +69,7 @@ ol, li {
     border-left: 2px solid #8f8f8f;
 }
 
-/* Upload Button Styling*/
+/* Upload Button Styling
 #upload {
   font-family: Arial;
   color: #ffffff;
@@ -89,7 +89,8 @@ ol, li {
   background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
   text-decoration: none;
 }
-/* Next and Back Button Styling*/
+*/
+/* Next and Back Button Styling
 #back, #next {
     display: inline-block;
     width:200px;
@@ -101,9 +102,35 @@ ol, li {
 #back {
      float: left;
 }
+*/
 
 #next {
-    float: right;
+    display:block;
+    padding: 10px;
+    margin: 5px auto;
+    font-family: Arial;
+    width: 620px;
+    color: #ffffff;
+    font-size: 16px;
+    background: #ffa100;
+}
+
+#next:hover {
+    background: #ffb73b;
+}
+
+#ruleOfThirds, #mostColorfulArea, #mostInterestingArea {
+    padding: 5px;
+    margin: 5px auto;
+    font-family: Arial;
+    width: 200px;
+    color: #ffffff;
+    font-size: 12px;
+    background: #6d00ff;
+}
+
+#ruleOfThirds:hover, #mostColorfulArea:hover, #mostInterestingArea:hover {
+    background: #903cff;
 }
 
 /* Image for the Crop Page*/
@@ -158,8 +185,7 @@ ol, li {
     position: relative;
     left: 0;
     display: inline-block;
-    margin-right: -50%;
-    transform: translate(-50%, 0);
+    margin: 0 auto;
 }
 
 #cropArea {
